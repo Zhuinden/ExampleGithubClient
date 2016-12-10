@@ -1,0 +1,10 @@
+<resources>
+    <string name="app_name">Zh-Github</string>
+    <string name="title_repositories">REPOSITORIES</string>
+    <string name="title_about">ABOUT</string>
+    <string name="title_logout">LOGOUT</string>
+    <string name="open">Open</string>
+    <string name="close">Close</string>
+    <string name="title_login">LOGIN</string>
+    <string name="title_repository_details">REPO DETAILS</string>
+</resources>
