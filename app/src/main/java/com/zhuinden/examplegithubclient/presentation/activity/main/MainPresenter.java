@@ -18,7 +18,7 @@ import flowless.History;
 /**
  * Created by Owner on 2016.12.10.
  */
-@ActivityScope(value = MainActivity.class)
+@ActivityScope
 public class MainPresenter
         extends BasePresenter<MainPresenter.ViewContract>
         implements Bundleable {

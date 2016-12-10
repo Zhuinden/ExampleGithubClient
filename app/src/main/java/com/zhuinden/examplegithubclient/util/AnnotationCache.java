@@ -4,7 +4,6 @@ import android.content.Context;
 
 import com.zhuinden.examplegithubclient.application.injection.ActivityScope;
 import com.zhuinden.examplegithubclient.application.injection.MainActivityComponent;
-import com.zhuinden.examplegithubclient.presentation.activity.main.MainActivity;
 import com.zhuinden.examplegithubclient.presentation.activity.main.MainKey;
 
 import java.lang.reflect.InvocationTargetException;
@@ -17,13 +16,11 @@ import javax.inject.Inject;
  * Created by Owner on 2016.12.10.
  */
 
-@ActivityScope(MainActivity.class)
+@ActivityScope
 public class AnnotationCache {
     public static final String TAG = "AnnotationCache";
 
-    @SuppressWarnings("unchecked")
     public static AnnotationCache getCache(Context context) {
-        //noinspection ResourceType
         MainActivityComponent mainActivityComponent = DaggerService.getComponent(context, MainKey.KEY);
         return mainActivityComponent.annotationCache();
     }
