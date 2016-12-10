@@ -54,8 +54,7 @@ public class MainPresenter
     private String title;
 
     @Override
-    public void attachView(MainPresenter.ViewContract view) {
-        super.attachView(view);
+    protected void initializeView(ViewContract view) {
         view.setTitle(title);
         if(isDrawerOpen) {
             openDrawer();
