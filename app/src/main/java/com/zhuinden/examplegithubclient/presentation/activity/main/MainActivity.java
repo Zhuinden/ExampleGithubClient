@@ -81,7 +81,8 @@ public class MainActivity
         super.attachBaseContext(newBase);
     }
 
-    Bundle tempSavedInstanceState;
+    private Bundle tempSavedInstanceState;
+    private boolean didInject = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -111,20 +112,23 @@ public class MainActivity
     }
 
     private void injectServices(Bundle savedInstanceState) {
-        if(savedInstanceState == null) { // need to get bundle between onPostCreate and after onCreate
-            savedInstanceState = tempSavedInstanceState;
-        }
-        ServiceProvider serviceProvider = Flow.services(getBaseContext());
-        MainActivityComponent mainActivityComponent;
-        if(!serviceProvider.hasService(MainKey.KEY, DaggerService.TAG)) {
-            mainActivityComponent = DaggerMainActivityComponent.create();
-            serviceProvider.bindService(MainKey.KEY, DaggerService.TAG, mainActivityComponent);
-        } else {
-            mainActivityComponent = DaggerService.getComponent(getBaseContext(), MainKey.KEY);
-        }
-        mainActivityComponent.inject(this);
-        if(savedInstanceState != null) {
-            mainPresenter.fromBundle(savedInstanceState.getBundle("PRESENTER_STATE"));
+        if(!didInject) {
+            didInject = true;
+            if(savedInstanceState == null) { // need to get bundle between onPostCreate and after onCreate
+                savedInstanceState = tempSavedInstanceState;
+            }
+            ServiceProvider serviceProvider = Flow.services(getBaseContext());
+            MainActivityComponent mainActivityComponent;
+            if(!serviceProvider.hasService(MainKey.KEY, DaggerService.TAG)) {
+                mainActivityComponent = DaggerMainActivityComponent.create();
+                serviceProvider.bindService(MainKey.KEY, DaggerService.TAG, mainActivityComponent);
+            } else {
+                mainActivityComponent = DaggerService.getComponent(getBaseContext(), MainKey.KEY);
+            }
+            mainActivityComponent.inject(this);
+            if(savedInstanceState != null) {
+                mainPresenter.fromBundle(savedInstanceState.getBundle("PRESENTER_STATE"));
+            }
         }
     }
 
