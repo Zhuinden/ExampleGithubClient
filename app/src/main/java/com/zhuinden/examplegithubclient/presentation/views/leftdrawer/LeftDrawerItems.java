@@ -8,9 +8,6 @@ import com.zhuinden.examplegithubclient.presentation.paths.about.AboutKey;
 import com.zhuinden.examplegithubclient.presentation.paths.login.LoginKey;
 import com.zhuinden.examplegithubclient.presentation.paths.repositories.RepositoriesKey;
 
-import java.util.HashMap;
-import java.util.Map;
-
 /**
  * Created by Zhuinden on 2016.12.10..
  */
@@ -19,8 +16,6 @@ public enum LeftDrawerItems {
     REPOSITORIES(R.string.title_repositories, R.drawable.icon_repositories, RepositoriesKey::create),
     ABOUT(R.string.title_about, R.drawable.icon_about, AboutKey::create),
     LOGOUT(R.string.title_logout, R.drawable.icon_logout, LoginKey::create);
-
-    private static Map<LeftDrawerItems, Integer> TITLES = new HashMap<>();
 
     private final int labelId;
     private final int imageId;
