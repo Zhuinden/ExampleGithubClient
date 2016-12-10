@@ -22,5 +22,8 @@
         android:id="@+id/toolbar_text"
         android:layout_width="wrap_content"
         android:layout_height="match_parent"
+        android:textColor="@color/icons"
+        android:textSize="@dimen/_16sdp"
+        android:gravity="center_vertical"
         android:layout_centerInParent="true"/>
 </RelativeLayout>

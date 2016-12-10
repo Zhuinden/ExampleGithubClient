@@ -3,29 +3,37 @@ package com.zhuinden.examplegithubclient.application;
 import android.content.Context;
 import android.content.Intent;
 import android.content.res.Configuration;
+import android.os.Bundle;
 import android.support.annotation.NonNull;
-import android.support.v4.content.ContextCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.view.Gravity;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
 
 import com.zhuinden.examplegithubclient.R;
 import com.zhuinden.examplegithubclient.presentation.paths.login.LoginKey;
+import com.zhuinden.examplegithubclient.util.Title;
 import com.zhuinden.examplegithubclient.util.TransitionDispatcher;
+
+import java.util.LinkedHashMap;
+import java.util.Map;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
+import flowless.Dispatcher;
 import flowless.Flow;
+import flowless.Traversal;
+import flowless.TraversalCallback;
+import flowless.preset.DispatcherUtils;
 
 public class MainActivity
-        extends AppCompatActivity {
+        extends AppCompatActivity
+        implements Dispatcher {
     @BindView(R.id.drawer_layout)
     DrawerLayout drawerLayout;
 
@@ -34,6 +42,12 @@ public class MainActivity
 
     @BindView(R.id.hidden_toolbar)
     Toolbar hiddenToolbar;
+
+    @BindView(R.id.toolbar_text)
+    TextView toolbarText;
+
+    @BindView(R.id.toolbar)
+    ViewGroup toolbar;
 
     @OnClick(R.id.toolbar_drawer_toggle)
     public void onClickDrawerToggle() {
@@ -56,7 +70,7 @@ public class MainActivity
         transitionDispatcher = new TransitionDispatcher(this);
         newBase = Flow.configure(newBase, this) //
                 .defaultKey(LoginKey.create()) //
-                .dispatcher(transitionDispatcher) //
+                .dispatcher(this) //
                 .install(); //
         transitionDispatcher.setBaseContext(newBase);
         super.attachBaseContext(newBase);
@@ -124,5 +138,32 @@ public class MainActivity
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
         transitionDispatcher.onRequestPermissionsResult(requestCode, permissions, grantResults);
+    }
+
+    @Override
+    public void dispatch(@NonNull Traversal traversal, @NonNull TraversalCallback callback) { // TODO: move this aspect of dispatcher to Presenter layer, Activity must not have state
+        drawerLayout.closeDrawers();
+        Object newKey = DispatcherUtils.getNewKey(traversal); // TODO: remove duplication in LeftDrawerItems
+        toolbarText.setText(getTitle(newKey));
+        transitionDispatcher.dispatch(traversal, callback);
+    }
+
+    // from flow-sample: https://github.com/Zhuinden/flow-sample/blob/master/src/main/java/com/example/flow/pathview/SimplePathContainer.java#L100-L114
+    private static final Map<Class, Integer> PATH_TITLE_CACHE = new LinkedHashMap<>();
+
+    protected int getTitle(Object path) { // TODO: remove duplication in LeftDrawerItems
+        Class pathType = path.getClass();
+        Integer titleResId = PATH_TITLE_CACHE.get(pathType);
+        if(titleResId == null) {
+            Title title = (Title) pathType.getAnnotation(Title.class);
+            if(title == null) {
+                throw new IllegalArgumentException(String.format("@%s annotation not found on class %s",
+                        Title.class.getSimpleName(),
+                        pathType.getName()));
+            }
+            titleResId = title.value();
+            PATH_TITLE_CACHE.put(pathType, titleResId);
+        }
+        return titleResId;
     }
 }
