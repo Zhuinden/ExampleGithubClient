@@ -6,7 +6,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="com.zhuinden.examplegithubclient.application.MainActivity">
+    tools:context="com.zhuinden.examplegithubclient.presentation.activity.main.MainActivity">
     <!-- The main content view -->
     <RelativeLayout
         android:id="@+id/main_container"

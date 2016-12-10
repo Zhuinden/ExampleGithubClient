@@ -1,6 +1,7 @@
 package com.zhuinden.examplegithubclient.presentation.views.leftdrawer;
 
 import android.content.Context;
+import android.content.ContextWrapper;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -10,14 +11,15 @@ import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
 import com.zhuinden.examplegithubclient.R;
-import com.zhuinden.examplegithubclient.presentation.paths.login.LoginKey;
+import com.zhuinden.examplegithubclient.application.injection.MainActivityComponent;
+import com.zhuinden.examplegithubclient.presentation.activity.main.MainKey;
+import com.zhuinden.examplegithubclient.presentation.activity.main.MainPresenter;
+import com.zhuinden.examplegithubclient.util.DaggerService;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
-import flowless.Direction;
 import flowless.Flow;
-import flowless.History;
 
 /**
  * Created by Zhuinden on 2016.12.10..
@@ -55,11 +57,10 @@ public class LeftDrawerAdapter
         @OnClick(R.id.left_drawer_item)
         public void onClickDrawerItem(View view) {
             Object newKey = leftDrawerItem.getKeyCreator().createKey();
-            if(newKey instanceof LoginKey) {
-                Flow.get(view).setHistory(History.single(newKey), Direction.FORWARD); // TODO: move to unified router logic
-            } else {
-                Flow.get(view).set(newKey);
-            }
+            MainActivityComponent component = Flow.services(((ContextWrapper) context).getBaseContext())
+                    .getService(MainKey.KEY, DaggerService.TAG);
+            MainPresenter mainPresenter = component.mainPresenter();
+            mainPresenter.goToKey(Flow.get(((ContextWrapper) context).getBaseContext()), newKey);
         }
 
         public LeftDrawerViewHolder(View itemView) {
