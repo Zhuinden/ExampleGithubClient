@@ -7,14 +7,14 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:gravity="center"
-        android:layout_centerInParent="true"
-        android:orientation="vertical">
+        android:orientation="vertical"
+        android:layout_centerInParent="true">
 
         <EditText
             android:id="@+id/login_username"
             android:layout_marginLeft="@dimen/_32sdp"
             android:layout_marginRight="@dimen/_32sdp"
-            android:layout_marginTop="@dimen/_16sdp"
+            android:layout_marginTop="@dimen/_32sdp"
             android:layout_marginBottom="@dimen/_16sdp"
             android:hint="@string/username"
             android:layout_width="match_parent"
