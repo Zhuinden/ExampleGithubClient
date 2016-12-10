@@ -143,7 +143,7 @@ public class MainActivity
     @Override
     public void dispatch(@NonNull Traversal traversal, @NonNull TraversalCallback callback) { // TODO: move this aspect of dispatcher to Presenter layer, Activity must not have state
         drawerLayout.closeDrawers();
-        Object newKey = DispatcherUtils.getNewKey(traversal); // TODO: remove duplication in LeftDrawerItems
+        Object newKey = DispatcherUtils.getNewKey(traversal);
         toolbarText.setText(getTitle(newKey));
         transitionDispatcher.dispatch(traversal, callback);
     }
@@ -151,7 +151,7 @@ public class MainActivity
     // from flow-sample: https://github.com/Zhuinden/flow-sample/blob/master/src/main/java/com/example/flow/pathview/SimplePathContainer.java#L100-L114
     private static final Map<Class, Integer> PATH_TITLE_CACHE = new LinkedHashMap<>();
 
-    protected int getTitle(Object path) { // TODO: remove duplication in LeftDrawerItems
+    protected int getTitle(Object path) {
         Class pathType = path.getClass();
         Integer titleResId = PATH_TITLE_CACHE.get(pathType);
         if(titleResId == null) {
