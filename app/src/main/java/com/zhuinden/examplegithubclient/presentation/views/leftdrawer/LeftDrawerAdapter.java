@@ -11,7 +11,6 @@ import android.widget.TextView;
 import com.bumptech.glide.Glide;
 import com.zhuinden.examplegithubclient.R;
 import com.zhuinden.examplegithubclient.presentation.paths.login.LoginKey;
-import com.zhuinden.examplegithubclient.util.GlideImageView;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -71,7 +70,7 @@ public class LeftDrawerAdapter
 
         public void bind(LeftDrawerItems leftDrawerItem) {
             this.leftDrawerItem = leftDrawerItem;
-            leftDrawerText.setText(context.getResources().getText(leftDrawerItem.getLabelId()));
+            leftDrawerText.setText(leftDrawerItem.getLabelId());
             Glide.with(context).load(leftDrawerItem.getImageId()).dontAnimate().into(imageView);
         }
     }

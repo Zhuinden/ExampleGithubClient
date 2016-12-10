@@ -1,12 +1,12 @@
 package com.zhuinden.examplegithubclient.presentation.views.leftdrawer;
 
 import android.support.annotation.DrawableRes;
+import android.support.annotation.StringRes;
 
 import com.zhuinden.examplegithubclient.R;
 import com.zhuinden.examplegithubclient.presentation.paths.about.AboutKey;
 import com.zhuinden.examplegithubclient.presentation.paths.login.LoginKey;
 import com.zhuinden.examplegithubclient.presentation.paths.repositories.RepositoriesKey;
-import com.zhuinden.examplegithubclient.util.Title;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -16,40 +16,25 @@ import java.util.Map;
  */
 
 public enum LeftDrawerItems {
-    REPOSITORIES(R.drawable.icon_repositories, RepositoriesKey::create),
-    ABOUT(R.drawable.icon_about, AboutKey::create),
-    LOGOUT(R.drawable.icon_logout, LoginKey::create);
+    REPOSITORIES(R.string.title_repositories, R.drawable.icon_repositories, RepositoriesKey::create),
+    ABOUT(R.string.title_about, R.drawable.icon_about, AboutKey::create),
+    LOGOUT(R.string.title_logout, R.drawable.icon_logout, LoginKey::create);
 
     private static Map<LeftDrawerItems, Integer> TITLES = new HashMap<>();
 
+    private final int labelId;
     private final int imageId;
 
     private final KeyCreator keyCreator;
 
-    private LeftDrawerItems(@DrawableRes int imageId, KeyCreator keyCreator) {
+    private LeftDrawerItems(@StringRes int labelId, @DrawableRes int imageId, KeyCreator keyCreator) {
+        this.labelId = labelId;
         this.imageId = imageId;
         this.keyCreator = keyCreator;
     }
 
     public int getLabelId() {
-        if(!TITLES.containsKey(this)) {
-            Object key = keyCreator.createKey();
-            Class pathType = key.getClass();
-            Integer titleResId = TITLES.get(pathType); // TODO: remove duplication versus TransitionDispatcher
-            if(titleResId == null) {                  // TODO: remove duplication in MainActivity
-                Title title = (Title) pathType.getAnnotation(Title.class);
-                if(title == null) {
-                    throw new IllegalArgumentException(String.format("@%s annotation not found on class %s",
-                            Title.class.getSimpleName(),
-                            pathType.getName()));
-                }
-                titleResId = title.value();
-                TITLES.put(this, titleResId);
-            }
-            return titleResId;
-        } else {
-            return TITLES.get(this);
-        }
+        return labelId;
     }
 
     public int getImageId() {
