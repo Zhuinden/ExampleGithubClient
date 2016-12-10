@@ -2,28 +2,16 @@ package com.zhuinden.examplegithubclient.util;
 
 import android.app.Activity;
 import android.content.Context;
-import android.content.Intent;
-import android.os.Bundle;
-import android.support.annotation.CheckResult;
 import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
 import com.transitionseverywhere.TransitionManager;
 
-import java.util.LinkedHashMap;
-import java.util.Map;
-
-import flowless.Direction;
-import flowless.Dispatcher;
-import flowless.Flow;
-import flowless.ForceBundler;
 import flowless.Traversal;
 import flowless.TraversalCallback;
 import flowless.preset.DispatcherUtils;
-import flowless.preset.FlowContainerLifecycleListener;
 import flowless.preset.SingleRootDispatcher;
 
 /**
@@ -42,7 +30,8 @@ public class TransitionDispatcher extends SingleRootDispatcher {
             return;
         }
         final Object newKey = DispatcherUtils.getNewKey(traversal);
-        int newKeyLayout = getLayout(newKey);
+        AnnotationCache annotationCache = AnnotationCache.getCache(activity.getBaseContext());
+        int newKeyLayout = annotationCache.getLayout(newKey);
 
         final ViewGroup root = rootHolder.getRoot();
         final View previousView = root.getChildAt(0);
@@ -60,24 +49,5 @@ public class TransitionDispatcher extends SingleRootDispatcher {
         }
         root.addView(newView);
         callback.onTraversalCompleted();
-    }
-
-    // from flow-sample: https://github.com/Zhuinden/flow-sample/blob/master/src/main/java/com/example/flow/pathview/SimplePathContainer.java#L100-L114
-    private static final Map<Class, Integer> PATH_LAYOUT_CACHE = new LinkedHashMap<>();
-
-    protected int getLayout(Object path) {
-        Class pathType = path.getClass();
-        Integer layoutResId = PATH_LAYOUT_CACHE.get(pathType);
-        if (layoutResId == null) {
-            Layout layout = (Layout) pathType.getAnnotation(Layout.class);
-            if (layout == null) {
-                throw new IllegalArgumentException(
-                        String.format("@%s annotation not found on class %s", Layout.class.getSimpleName(),
-                                pathType.getName()));
-            }
-            layoutResId = layout.value();
-            PATH_LAYOUT_CACHE.put(pathType, layoutResId);
-        }
-        return layoutResId;
     }
 }

@@ -18,12 +18,9 @@ import com.zhuinden.examplegithubclient.R;
 import com.zhuinden.examplegithubclient.application.injection.DaggerMainActivityComponent;
 import com.zhuinden.examplegithubclient.application.injection.MainActivityComponent;
 import com.zhuinden.examplegithubclient.presentation.paths.login.LoginKey;
+import com.zhuinden.examplegithubclient.util.AnnotationCache;
 import com.zhuinden.examplegithubclient.util.DaggerService;
-import com.zhuinden.examplegithubclient.util.Title;
 import com.zhuinden.examplegithubclient.util.TransitionDispatcher;
-
-import java.util.LinkedHashMap;
-import java.util.Map;
 
 import javax.inject.Inject;
 
@@ -57,6 +54,9 @@ public class MainActivity
 
     @Inject
     MainPresenter mainPresenter;
+
+    @Inject
+    AnnotationCache annotationCache;
 
     @OnClick(R.id.toolbar_drawer_toggle)
     public void onClickDrawerToggle() {
@@ -199,29 +199,24 @@ public class MainActivity
     public void dispatch(@NonNull Traversal traversal, @NonNull TraversalCallback callback) {
         injectServices(null);
         mainPresenter.closeDrawer();
+
         Object newKey = DispatcherUtils.getNewKey(traversal);
-        mainPresenter.setTitle(getString(getTitle(newKey)));
+        mainPresenter.setTitle(getString(annotationCache.getTitle(newKey)));
 
         transitionDispatcher.dispatch(traversal, callback);
     }
 
-    // TODO: merge with dispatcher's Layout logic
-    // from flow-sample: https://github.com/Zhuinden/flow-sample/blob/master/src/main/java/com/example/flow/pathview/SimplePathContainer.java#L100-L114
-    private static final Map<Class, Integer> PATH_TITLE_CACHE = new LinkedHashMap<>();
-
-    protected int getTitle(Object path) {
-        Class pathType = path.getClass();
-        Integer titleResId = PATH_TITLE_CACHE.get(pathType);
-        if(titleResId == null) {
-            Title title = (Title) pathType.getAnnotation(Title.class);
-            if(title == null) {
-                throw new IllegalArgumentException(String.format("@%s annotation not found on class %s",
-                        Title.class.getSimpleName(),
-                        pathType.getName()));
+    @Override
+    public Object getSystemService(String name) {
+        ServiceProvider serviceProvider = null;
+        try {
+            serviceProvider = Flow.services(getBaseContext());
+            if(serviceProvider != null && serviceProvider.hasService(MainKey.KEY, name)) {
+                return serviceProvider.getService(MainKey.KEY, name);
             }
-            titleResId = title.value();
-            PATH_TITLE_CACHE.put(pathType, titleResId);
+        } catch(NullPointerException e) {
+            // TODO: fix Flowless `InternalLifecycleIntegration.find(activity)` to support this
         }
-        return titleResId;
+        return super.getSystemService(name);
     }
 }
