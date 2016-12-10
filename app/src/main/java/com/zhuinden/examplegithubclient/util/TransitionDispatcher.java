@@ -9,6 +9,7 @@ import android.view.ViewGroup;
 
 import com.transitionseverywhere.TransitionManager;
 
+import flowless.Flow;
 import flowless.Traversal;
 import flowless.TraversalCallback;
 import flowless.preset.DispatcherUtils;
@@ -38,6 +39,10 @@ public class TransitionDispatcher extends SingleRootDispatcher {
         DispatcherUtils.persistViewToStateAndNotifyRemoval(traversal, previousView);
 
         Context internalContext = traversal.createContext(newKey, baseContext);
+        ComponentFactory.FactoryMethod<?> componentFactory = annotationCache.getComponentFactory(newKey);
+        if(componentFactory != null) {
+            Flow.services(internalContext).bindService(newKey, DaggerService.TAG, componentFactory.createComponent(baseContext));
+        }
         LayoutInflater layoutInflater = LayoutInflater.from(internalContext);
         final View newView = layoutInflater.inflate(newKeyLayout, root, false);
 

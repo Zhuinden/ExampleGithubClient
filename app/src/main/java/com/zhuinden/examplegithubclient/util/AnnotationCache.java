@@ -32,6 +32,7 @@ public class AnnotationCache {
     // from flow-sample: https://github.com/Zhuinden/flow-sample/blob/master/src/main/java/com/example/flow/pathview/SimplePathContainer.java#L100-L114
     private final Map<Class, Integer> PATH_LAYOUT_CACHE = new LinkedHashMap<>();
     private final Map<Class, Integer> PATH_TITLE_CACHE = new LinkedHashMap<>();
+    private final Map<Class, Class<? extends ComponentFactory.FactoryMethod<?>>> PATH_COMPONENT_FACTORY_CACHE = new LinkedHashMap<>();
 
     private <T, A> T getValueFromAnnotation(Map<Class, T> cache, Object path, Class<A> annotationClass) {
         Class pathType = path.getClass();
@@ -67,5 +68,41 @@ public class AnnotationCache {
 
     public int getTitle(Object path) {
         return getValueFromAnnotation(PATH_TITLE_CACHE, path, Title.class);
+    }
+
+    public ComponentFactory.FactoryMethod<?> getComponentFactory(Object path) {
+        Class pathType = path.getClass();
+        Class<? extends ComponentFactory.FactoryMethod<?>> value = PATH_COMPONENT_FACTORY_CACHE.get(pathType);
+        if(value == null) {
+            ComponentFactory annotation = (ComponentFactory) pathType.getAnnotation(ComponentFactory.class);
+            if(annotation == null) {
+                return null;
+            }
+            try {
+                value = (Class<ComponentFactory.FactoryMethod<?>>) annotation.getClass().getMethod("value").invoke(annotation);
+                PATH_COMPONENT_FACTORY_CACHE.put(pathType, value);
+            } catch(IllegalAccessException e) {
+                // shouldn't happen
+                e.printStackTrace();
+            } catch(InvocationTargetException e) {
+                // shouldn't happen
+                e.printStackTrace();
+            } catch(NoSuchMethodException e) {
+                // shouldn't happen
+                e.printStackTrace();
+            }
+        }
+        try {
+            if(value != null) {
+                return value.newInstance();
+            }
+        } catch(InstantiationException e) {
+            // shouldn't happen
+            e.printStackTrace();
+        } catch(IllegalAccessException e) {
+            // shouldn't happen
+            e.printStackTrace();
+        }
+        return null;
     }
 }

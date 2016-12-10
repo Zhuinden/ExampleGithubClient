@@ -11,4 +11,5 @@ import dagger.Component;
 @ViewScope(RepositoriesView.class)
 @Component(dependencies = MainActivityComponent.class)
 public interface RepositoriesComponent {
+    void inject(RepositoriesView repositoriesView);
 }
