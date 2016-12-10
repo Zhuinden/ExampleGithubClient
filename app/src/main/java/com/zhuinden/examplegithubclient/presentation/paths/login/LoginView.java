@@ -3,7 +3,17 @@ package com.zhuinden.examplegithubclient.presentation.paths.login;
 import android.annotation.TargetApi;
 import android.content.Context;
 import android.util.AttributeSet;
+import android.view.View;
 import android.widget.RelativeLayout;
+import android.widget.TextView;
+
+import com.zhuinden.examplegithubclient.R;
+import com.zhuinden.examplegithubclient.presentation.paths.repositories.RepositoriesKey;
+
+import butterknife.BindView;
+import butterknife.ButterKnife;
+import butterknife.OnClick;
+import flowless.Flow;
 
 /**
  * Created by Zhuinden on 2016.12.10..
@@ -38,11 +48,23 @@ public class LoginView
         }
     }
 
+    @BindView(R.id.login_username)
+    TextView username;
+
+    @BindView(R.id.login_password)
+    TextView password;
+
+    @OnClick(R.id.login_login)
+    public void login(View view) {
+        // TODO: add actual logic
+        Flow.get(this).set(RepositoriesKey.create()); // TODO: move to presenter/routing layer
+    }
+
     @Override
     protected void onFinishInflate() {
         super.onFinishInflate();
         if(!isInEditMode()) {
-            // .
+            ButterKnife.bind(this);
         }
     }
 }
