@@ -20,7 +20,7 @@ import flowless.History;
  */
 @ActivityScope(value = MainActivity.class)
 public class MainPresenter
-        extends BasePresenter<MainActivity>
+        extends BasePresenter<MainPresenter.ViewContract>
         implements Bundleable {
     @Inject
     public MainPresenter() {
@@ -54,7 +54,7 @@ public class MainPresenter
     private String title;
 
     @Override
-    public void attachView(MainActivity view) {
+    public void attachView(MainPresenter.ViewContract view) {
         super.attachView(view);
         view.setTitle(title);
         if(isDrawerOpen) {
