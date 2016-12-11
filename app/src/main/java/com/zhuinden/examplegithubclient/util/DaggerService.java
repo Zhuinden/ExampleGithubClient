@@ -14,12 +14,12 @@ public class DaggerService {
     @SuppressWarnings("unchecked")
     public static <T> T getComponent(Context context) {
         //noinspection ResourceType
-        return (T) Flow.services(context).getService(context, TAG);
+        return (T) Flow.get(context).getServices().getService(context, TAG);
     }
 
     @SuppressWarnings("unchecked")
     public static <T> T getComponent(Context context, Object key) {
         //noinspection ResourceType
-        return (T) Flow.services(context).getService(key, TAG);
+        return (T) Flow.get(context).getServices().getService(key, TAG);
     }
 }

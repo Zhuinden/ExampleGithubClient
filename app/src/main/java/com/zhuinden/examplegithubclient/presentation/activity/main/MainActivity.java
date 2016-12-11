@@ -119,7 +119,7 @@ public class MainActivity
         if(savedInstanceState == null) { // need to get bundle between onPostCreate and after onCreate
             savedInstanceState = tempSavedInstanceState;
         }
-        ServiceProvider serviceProvider = Flow.services(getBaseContext());
+        ServiceProvider serviceProvider = Flow.get(getBaseContext()).getServices();
         MainActivityComponent mainActivityComponent;
         if(!serviceProvider.hasService(MainKey.KEY, DaggerService.TAG)) {
             mainActivityComponent = DaggerMainActivityComponent.create();
@@ -208,14 +208,12 @@ public class MainActivity
 
     @Override
     public Object getSystemService(String name) {
-        ServiceProvider serviceProvider = null;
         try {
-            serviceProvider = Flow.services(getBaseContext());
-            if(serviceProvider != null && serviceProvider.hasService(MainKey.KEY, name)) {
-                return serviceProvider.getService(MainKey.KEY, name);
+            Flow flow = Flow.get(getBaseContext());
+            if(flow.getServices().hasService(MainKey.KEY, name)) {
+                return flow.getServices().getService(MainKey.KEY, name);
             }
-        } catch(NullPointerException e) {
-            // TODO: fix Flowless `InternalLifecycleIntegration.find(activity)` to support this
+        } catch(IllegalStateException e) { // TODO: Flow does not exist at this point
         }
         return super.getSystemService(name);
     }

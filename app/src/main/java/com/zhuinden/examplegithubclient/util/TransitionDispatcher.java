@@ -38,16 +38,17 @@ public class TransitionDispatcher extends SingleRootDispatcher {
         final View previousView = root.getChildAt(0);
         DispatcherUtils.persistViewToStateAndNotifyRemoval(traversal, previousView);
 
+        Flow flow = Flow.get(baseContext);
         for(Object key : traversal.destination) { // retain only current key's services
             if(!newKey.equals(key)) {
-                Flow.services(baseContext).unbindServices(key);
+                flow.getServices().unbindServices(key);
             }
         }
         Context internalContext = traversal.createContext(newKey, baseContext);
-        if(!Flow.services(baseContext).hasService(newKey, DaggerService.TAG)) {
+        if(!flow.getServices().hasService(newKey, DaggerService.TAG)) {
             ComponentFactory.FactoryMethod<?> componentFactory = annotationCache.getComponentFactory(newKey);
             if(componentFactory != null) {
-                Flow.services(internalContext).bindService(newKey, DaggerService.TAG, componentFactory.createComponent(baseContext));
+                flow.getServices().bindService(newKey, DaggerService.TAG, componentFactory.createComponent(baseContext));
             }
         }
         LayoutInflater layoutInflater = LayoutInflater.from(internalContext);

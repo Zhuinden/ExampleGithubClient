@@ -57,7 +57,7 @@ public class LeftDrawerAdapter
         @OnClick(R.id.left_drawer_item)
         public void onClickDrawerItem(View view) {
             Object newKey = leftDrawerItem.getKeyCreator().createKey();
-            MainActivityComponent component = Flow.services(((ContextWrapper) context).getBaseContext())
+            MainActivityComponent component = Flow.get(context).getServices()
                     .getService(MainKey.KEY, DaggerService.TAG);
             MainPresenter mainPresenter = component.mainPresenter();
             mainPresenter.goToKey(Flow.get(((ContextWrapper) context).getBaseContext()), newKey);
