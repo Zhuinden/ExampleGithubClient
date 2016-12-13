@@ -10,54 +10,37 @@ import com.bluelinelabs.logansquare.annotation.JsonObject;
 public class Owner {
     @JsonField(name = "login")
     private String login;
-
     @JsonField(name = "id")
     private Integer id;
-
     @JsonField(name = "avatar_url")
     private String avatarUrl;
-
     @JsonField(name = "gravatar_id")
     private String gravatarId;
-
     @JsonField(name = "url")
     private String url;
-
     @JsonField(name = "html_url")
-
     private String htmlUrl;
     @JsonField(name = "followers_url")
-
     private String followersUrl;
     @JsonField(name = "following_url")
-
     private String followingUrl;
     @JsonField(name = "gists_url")
-
     private String gistsUrl;
     @JsonField(name = "starred_url")
-
     private String starredUrl;
     @JsonField(name = "subscriptions_url")
-
     private String subscriptionsUrl;
     @JsonField(name = "organizations_url")
-
     private String organizationsUrl;
     @JsonField(name = "repos_url")
-
     private String reposUrl;
     @JsonField(name = "events_url")
-
     private String eventsUrl;
     @JsonField(name = "received_events_url")
-
     private String receivedEventsUrl;
     @JsonField(name = "type")
-
     private String type;
     @JsonField(name = "site_admin")
-
     private Boolean siteAdmin;
 
     /**

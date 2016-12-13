@@ -14,7 +14,6 @@ import java.util.List;
 
 import javax.inject.Inject;
 
-import bolts.Continuation;
 import bolts.Task;
 import butterknife.ButterKnife;
 
@@ -60,16 +59,12 @@ public class RepositoriesView
         super.onFinishInflate();
         if(!isInEditMode()) {
             ButterKnife.bind(this);
-            getRepositoriesInteractor.getRepositories("Zhuinden").continueWith(new Continuation<List<Repository>, Void>() {
-                @Override
-                public Void then(Task<List<Repository>> task)
-                        throws Exception {
-                    List<Repository> repositories = task.getResult();
-                    for(Repository repository : repositories) {
-                        Log.i("RepositoriesView", repository.getName());
-                    }
-                    return null;
+            getRepositoriesInteractor.getRepositories("Zhuinden").continueWith(task -> {
+                List<Repository> repositories = task.getResult();
+                for(Repository repository : repositories) {
+                    Log.i("RepositoriesView", repository.getName());
                 }
+                return null;
             }, Task.UI_THREAD_EXECUTOR);
         }
     }

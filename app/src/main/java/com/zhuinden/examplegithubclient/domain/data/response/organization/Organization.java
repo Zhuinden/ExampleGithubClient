@@ -81,106 +81,72 @@ public class Organization {
     @JsonField(name = "compare_url")
     private String compareUrl;
     @JsonField(name = "merges_url")
-
     private String mergesUrl;
     @JsonField(name = "archive_url")
-
     private String archiveUrl;
     @JsonField(name = "downloads_url")
-
     private String downloadsUrl;
     @JsonField(name = "issues_url")
-
     private String issuesUrl;
     @JsonField(name = "pulls_url")
-
     private String pullsUrl;
     @JsonField(name = "milestones_url")
-
     private String milestonesUrl;
     @JsonField(name = "notifications_url")
-
     private String notificationsUrl;
     @JsonField(name = "labels_url")
-
     private String labelsUrl;
     @JsonField(name = "releases_url")
-
     private String releasesUrl;
     @JsonField(name = "deployments_url")
-
     private String deploymentsUrl;
     @JsonField(name = "created_at")
-
     private String createdAt;
     @JsonField(name = "updated_at")
-
     private String updatedAt;
     @JsonField(name = "pushed_at")
-
     private String pushedAt;
     @JsonField(name = "git_url")
-
     private String gitUrl;
     @JsonField(name = "ssh_url")
-
     private String sshUrl;
     @JsonField(name = "clone_url")
-
     private String cloneUrl;
     @JsonField(name = "svn_url")
-
     private String svnUrl;
     @JsonField(name = "homepage")
-
     private String homepage;
     @JsonField(name = "size")
-
     private Integer size;
     @JsonField(name = "stargazers_count")
-
     private Integer stargazersCount;
     @JsonField(name = "watchers_count")
-
     private Integer watchersCount;
     @JsonField(name = "language")
-
     private String language;
     @JsonField(name = "has_issues")
-
     private Boolean hasIssues;
     @JsonField(name = "has_downloads")
-
     private Boolean hasDownloads;
     @JsonField(name = "has_wiki")
-
     private Boolean hasWiki;
     @JsonField(name = "has_pages")
-
     private Boolean hasPages;
     @JsonField(name = "forks_count")
-
     private Integer forksCount;
     @JsonField(name = "mirror_url")
-
     private Object mirrorUrl;
     @JsonField(name = "open_issues_count")
-
     private Integer openIssuesCount;
     @JsonField(name = "forks")
-
     private Integer forks;
     @JsonField(name = "open_issues")
-
     private Integer openIssues;
     @JsonField(name = "watchers")
-
     private Integer watchers;
     @JsonField(name = "default_branch")
-
     private String defaultBranch;
     @JsonField(name = "permissions")
-
     private Permission permissions;
 
     /**
