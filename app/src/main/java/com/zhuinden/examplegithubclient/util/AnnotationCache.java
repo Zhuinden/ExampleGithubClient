@@ -7,8 +7,12 @@ import com.zhuinden.examplegithubclient.presentation.activity.main.MainComponent
 import com.zhuinden.examplegithubclient.presentation.activity.main.MainKey;
 
 import java.lang.reflect.InvocationTargetException;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.HashSet;
 import java.util.LinkedHashMap;
 import java.util.Map;
+import java.util.Set;
 
 import javax.inject.Inject;
 
@@ -35,6 +39,7 @@ public class AnnotationCache {
     private final Map<Class, Class<? extends ComponentFactory.FactoryMethod<?>>> PATH_COMPONENT_FACTORY_CACHE = new LinkedHashMap<>();
     private final Map<Class, Boolean> LEFT_DRAWER_STATE_CACHE = new LinkedHashMap<>();
     private final Map<Class, Boolean> TOOLBAR_BUTTON_STATE_CACHE = new LinkedHashMap<>();
+    private final Map<Class, Class<?>[]> IS_CHILD_OF_CACHE = new LinkedHashMap<>();
 
     // from flow-sample: https://github.com/Zhuinden/flow-sample/blob/master/src/main/java/com/example/flow/pathview/SimplePathContainer.java#L100-L114
     public int getLayout(Object path) {
@@ -104,5 +109,14 @@ public class AnnotationCache {
             cache.put(pathType, value);
         }
         return value;
+    }
+
+    public Set<Object> getChildOf(Object path) {
+        Class<?>[] value = getValueFromAnnotation(IS_CHILD_OF_CACHE, path, IsChildOf.class, true);
+        if(value != null) {
+            return new HashSet<>(Arrays.asList(value));
+        } else {
+            return Collections.emptySet();
+        }
     }
 }

@@ -3,7 +3,7 @@
                 xmlns:android="http://schemas.android.com/apk/res/android"
                 android:layout_width="match_parent"
                 android:layout_height="@dimen/_40sdp"
-                android:background="@drawable/button_selector"
+                android:background="@drawable/drawer_button_selector"
                 android:clickable="true"
                 android:orientation="vertical">
 

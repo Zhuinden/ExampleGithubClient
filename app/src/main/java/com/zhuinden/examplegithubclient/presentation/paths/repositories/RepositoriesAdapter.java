@@ -15,6 +15,7 @@ import javax.inject.Inject;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import butterknife.OnClick;
 
 /**
  * Created by Zhuinden on 2016.12.18..
@@ -51,15 +52,29 @@ public class RepositoriesAdapter
 
     public static class ViewHolder
             extends RecyclerView.ViewHolder {
+        @Inject
+        RepositoriesPresenter repositoriesPresenter;
+
         @BindView(R.id.repositories_row_text)
         TextView row;
+
+        private String url;
+
+        @OnClick(R.id.repositories_row)
+        public void rowClicked() {
+            repositoriesPresenter.openRepository(url);
+        }
 
         public ViewHolder(View itemView) {
             super(itemView);
             ButterKnife.bind(this, itemView);
+
+            RepositoriesComponent repositoriesComponent = DaggerService.getComponent(itemView.getContext());
+            repositoriesComponent.inject(this);
         }
 
         public void bind(Repository repository) {
+            url = repository.getUrl();
             row.setText(repository.getName());
         }
     }

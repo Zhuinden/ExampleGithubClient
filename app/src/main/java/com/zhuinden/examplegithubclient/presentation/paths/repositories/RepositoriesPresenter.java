@@ -31,6 +31,8 @@ public class RepositoriesPresenter
     public interface ViewContract
             extends Presenter.ViewContract {
         void updateRepositories(List<Repository> repositories);
+
+        void openRepository(String url);
     }
 
     @Override
@@ -52,5 +54,9 @@ public class RepositoriesPresenter
 
     public List<Repository> getRepositories() {
         return repositories;
+    }
+
+    public void openRepository(String url) {
+        view.openRepository(url);
     }
 }

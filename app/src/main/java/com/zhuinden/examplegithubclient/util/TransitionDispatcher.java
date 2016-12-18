@@ -9,6 +9,8 @@ import android.view.ViewGroup;
 
 import com.transitionseverywhere.TransitionManager;
 
+import java.util.Set;
+
 import flowless.Flow;
 import flowless.Traversal;
 import flowless.TraversalCallback;
@@ -46,18 +48,21 @@ public class TransitionDispatcher extends SingleRootDispatcher {
                 }
             }
         }
-        for(Object key : traversal.destination) { // retain only current key's services
-            if(!newKey.equals(key)) {
+        Set<Object> parents = annotationCache.getChildOf(newKey);
+        for(Object key : traversal.destination) { // retain only current key's and parents' services
+            if(!newKey.equals(key) && !parents.contains(key)) {
                 flow.getServices().unbindServices(key);
+            } else {
+                if(!flow.getServices().hasService(key, DaggerService.TAG)) {
+                    ComponentFactory.FactoryMethod<?> componentFactory = annotationCache.getComponentFactory(key);
+                    if(componentFactory != null) {
+                        flow.getServices().bindService(key, DaggerService.TAG, componentFactory.createComponent(baseContext));
+                    }
+                }
             }
         }
         Context internalContext = traversal.createContext(newKey, baseContext);
-        if(!flow.getServices().hasService(newKey, DaggerService.TAG)) {
-            ComponentFactory.FactoryMethod<?> componentFactory = annotationCache.getComponentFactory(newKey);
-            if(componentFactory != null) {
-                flow.getServices().bindService(newKey, DaggerService.TAG, componentFactory.createComponent(baseContext));
-            }
-        }
+
         LayoutInflater layoutInflater = LayoutInflater.from(internalContext);
         final View newView = layoutInflater.inflate(newKeyLayout, root, false);
 

@@ -9,6 +9,7 @@ import android.widget.RelativeLayout;
 
 import com.zhuinden.examplegithubclient.R;
 import com.zhuinden.examplegithubclient.domain.data.response.repositories.Repository;
+import com.zhuinden.examplegithubclient.presentation.paths.repositorydetails.RepositoryDetailsKey;
 import com.zhuinden.examplegithubclient.util.DaggerService;
 
 import java.util.List;
@@ -17,6 +18,7 @@ import javax.inject.Inject;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import flowless.Flow;
 import flowless.preset.FlowLifecycles;
 
 /**
@@ -86,5 +88,10 @@ public class RepositoriesView
     @Override
     public void updateRepositories(List<Repository> repositories) {
         repositoriesAdapter.updateRepositories();
+    }
+
+    @Override
+    public void openRepository(String url) {
+        Flow.get(this).set(RepositoryDetailsKey.create(Flow.getKey(this), url));
     }
 }

@@ -14,4 +14,6 @@ public interface RepositoriesComponent {
     void inject(RepositoriesView repositoriesView);
 
     void inject(RepositoriesAdapter repositoriesAdapter);
+
+    void inject(RepositoriesAdapter.ViewHolder repositoriesViewHolder);
 }

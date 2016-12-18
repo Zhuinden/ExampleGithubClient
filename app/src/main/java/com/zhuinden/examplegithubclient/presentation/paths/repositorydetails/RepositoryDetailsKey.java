@@ -4,6 +4,8 @@ import android.os.Parcelable;
 
 import com.google.auto.value.AutoValue;
 import com.zhuinden.examplegithubclient.R;
+import com.zhuinden.examplegithubclient.presentation.paths.repositories.RepositoriesKey;
+import com.zhuinden.examplegithubclient.util.IsChildOf;
 import com.zhuinden.examplegithubclient.util.Layout;
 import com.zhuinden.examplegithubclient.util.LeftDrawerEnabled;
 import com.zhuinden.examplegithubclient.util.Title;
@@ -16,9 +18,14 @@ import com.zhuinden.examplegithubclient.util.Title;
 @Title(R.string.title_repository_details)
 @Layout(R.layout.path_repositorydetails)
 @LeftDrawerEnabled(false)
+@IsChildOf(RepositoriesKey.class)
 public abstract class RepositoryDetailsKey
         implements Parcelable {
-    public static RepositoryDetailsKey create() {
-        return new AutoValue_RepositoryDetailsKey();
+    abstract RepositoriesKey parent();
+
+    abstract String url();
+
+    public static RepositoryDetailsKey create(RepositoriesKey parent, String url) {
+        return new AutoValue_RepositoryDetailsKey(parent, url);
     }
 }
