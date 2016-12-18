@@ -16,6 +16,8 @@ import com.zhuinden.examplegithubclient.util.AnnotationCache;
 import com.zhuinden.examplegithubclient.util.DaggerService;
 import com.zhuinden.examplegithubclient.util.FlowlessActivity;
 
+import java.util.Set;
+
 import javax.inject.Inject;
 
 import butterknife.BindView;
@@ -50,6 +52,9 @@ public class MainActivity
     @BindView(R.id.toolbar_drawer_toggle)
     View drawerToggle;
 
+    @BindView(R.id.toolbar_go_previous)
+    View toolbarGoPrevious;
+
     @Inject
     MainPresenter mainPresenter;
 
@@ -59,6 +64,11 @@ public class MainActivity
     @OnClick(R.id.toolbar_drawer_toggle)
     public void onClickDrawerToggle() {
         mainPresenter.toggleDrawer();
+    }
+
+    @OnClick(R.id.toolbar_go_previous)
+    public void onClickGoPrevious() {
+        onBackPressed();
     }
 
     private void disableLeftDrawer() {
@@ -193,10 +203,17 @@ public class MainActivity
         }
 
         boolean isToolbarButtonVisible = annotationCache.getToolbarButtonVisibility(newKey);
-        if(isToolbarButtonVisible) {
-            drawerToggle.setVisibility(View.VISIBLE);
-        } else {
+        Set<Object> parents = annotationCache.getChildOf(newKey);
+        if(parents.size() > 0) {
             drawerToggle.setVisibility(View.GONE);
+            toolbarGoPrevious.setVisibility(View.VISIBLE);
+        } else {
+            if(isToolbarButtonVisible) {
+                drawerToggle.setVisibility(View.VISIBLE);
+            } else {
+                drawerToggle.setVisibility(View.GONE);
+            }
+            toolbarGoPrevious.setVisibility(View.GONE);
         }
 
         transitionDispatcher.dispatch(traversal, callback);
