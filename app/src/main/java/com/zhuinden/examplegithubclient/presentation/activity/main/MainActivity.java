@@ -98,12 +98,14 @@ public class MainActivity
             @Override
             public void onDrawerOpened(View drawerView) {
                 super.onDrawerOpened(drawerView);
+                mainPresenter.openDrawer();
                 supportInvalidateOptionsMenu();
             }
 
             @Override
             public void onDrawerClosed(View drawerView) {
                 super.onDrawerClosed(drawerView);
+                mainPresenter.closeDrawer();
                 supportInvalidateOptionsMenu();
             }
         };
