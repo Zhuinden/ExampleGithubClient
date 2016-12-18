@@ -1,4 +1,4 @@
-package com.zhuinden.examplegithubclient.presentation.paths.repositories;
+package com.zhuinden.examplegithubclient.presentation.paths.login;
 
 import android.content.Context;
 
@@ -8,14 +8,14 @@ import com.zhuinden.examplegithubclient.util.ComponentFactory;
 import com.zhuinden.examplegithubclient.util.DaggerService;
 
 /**
- * Created by Owner on 2016.12.10.
+ * Created by Zhuinden on 2016.12.18..
  */
 
-public class RepositoriesComponentFactory
-        implements ComponentFactory.FactoryMethod<RepositoriesComponent> {
+public class LoginComponentFactory
+        implements ComponentFactory.FactoryMethod<LoginComponent> {
     @Override
-    public RepositoriesComponent createComponent(Context context) {
+    public LoginComponent createComponent(Context context) {
         MainComponent mainComponent = DaggerService.getComponent(context, MainKey.KEY);
-        return DaggerRepositoriesComponent.builder().mainComponent(mainComponent).build();
+        return DaggerLoginComponent.builder().mainComponent(mainComponent).build();
     }
 }

@@ -3,7 +3,7 @@ package com.zhuinden.examplegithubclient.util;
 import android.content.Context;
 
 import com.zhuinden.examplegithubclient.application.injection.ActivityScope;
-import com.zhuinden.examplegithubclient.application.injection.MainActivityComponent;
+import com.zhuinden.examplegithubclient.presentation.activity.main.MainComponent;
 import com.zhuinden.examplegithubclient.presentation.activity.main.MainKey;
 
 import java.lang.reflect.InvocationTargetException;
@@ -21,8 +21,8 @@ public class AnnotationCache {
     public static final String TAG = "AnnotationCache";
 
     public static AnnotationCache getCache(Context context) {
-        MainActivityComponent mainActivityComponent = DaggerService.getComponent(context, MainKey.KEY);
-        return mainActivityComponent.annotationCache();
+        MainComponent mainComponent = DaggerService.getComponent(context, MainKey.KEY);
+        return mainComponent.annotationCache();
     }
 
     @Inject
@@ -33,7 +33,48 @@ public class AnnotationCache {
     private final Map<Class, Integer> PATH_LAYOUT_CACHE = new LinkedHashMap<>();
     private final Map<Class, Integer> PATH_TITLE_CACHE = new LinkedHashMap<>();
     private final Map<Class, Class<? extends ComponentFactory.FactoryMethod<?>>> PATH_COMPONENT_FACTORY_CACHE = new LinkedHashMap<>();
+    private final Map<Class, Boolean> LEFT_DRAWER_STATE_CACHE = new LinkedHashMap<>();
+    private final Map<Class, Boolean> TOOLBAR_BUTTON_STATE_CACHE = new LinkedHashMap<>();
 
+    // from flow-sample: https://github.com/Zhuinden/flow-sample/blob/master/src/main/java/com/example/flow/pathview/SimplePathContainer.java#L100-L114
+    public int getLayout(Object path) {
+        return getValueFromAnnotation(PATH_LAYOUT_CACHE, path, Layout.class, false);
+    }
+
+    public int getTitle(Object path) {
+        return getValueFromAnnotation(PATH_TITLE_CACHE, path, Title.class, false);
+    }
+
+    public ComponentFactory.FactoryMethod<?> getComponentFactory(Object path) {
+        Class<? extends ComponentFactory.FactoryMethod<?>> value = getValueFromAnnotation(PATH_COMPONENT_FACTORY_CACHE,
+                path,
+                ComponentFactory.class,
+                true);
+        try {
+            if(value != null) {
+                return value.newInstance();
+            }
+        } catch(InstantiationException e) {
+            // shouldn't happen
+            e.printStackTrace();
+        } catch(IllegalAccessException e) {
+            // shouldn't happen
+            e.printStackTrace();
+        }
+        return null;
+    }
+
+    public boolean getLeftDrawerEnabled(Object path) {
+        Boolean state = getValueFromAnnotation(LEFT_DRAWER_STATE_CACHE, path, LeftDrawerEnabled.class, true);
+        return state == null ? true : state;
+    }
+
+    public boolean getToolbarButtonVisibility(Object path) {
+        Boolean state = getValueFromAnnotation(TOOLBAR_BUTTON_STATE_CACHE, path, ToolbarButtonVisibility.class, true);
+        return state == null ? true : state;
+    }
+
+    // details, details
     private <T, A> T getValueFromAnnotation(Map<Class, T> cache, Object path, Class<A> annotationClass, boolean optional) {
         Class pathType = path.getClass();
         T value = cache.get(pathType);
@@ -63,33 +104,5 @@ public class AnnotationCache {
             cache.put(pathType, value);
         }
         return value;
-    }
-
-    // from flow-sample: https://github.com/Zhuinden/flow-sample/blob/master/src/main/java/com/example/flow/pathview/SimplePathContainer.java#L100-L114
-    public int getLayout(Object path) {
-        return getValueFromAnnotation(PATH_LAYOUT_CACHE, path, Layout.class, false);
-    }
-
-    public int getTitle(Object path) {
-        return getValueFromAnnotation(PATH_TITLE_CACHE, path, Title.class, false);
-    }
-
-    public ComponentFactory.FactoryMethod<?> getComponentFactory(Object path) {
-        Class<? extends ComponentFactory.FactoryMethod<?>> value = getValueFromAnnotation(PATH_COMPONENT_FACTORY_CACHE,
-                path,
-                ComponentFactory.class,
-                true);
-        try {
-            if(value != null) {
-                return value.newInstance();
-            }
-        } catch(InstantiationException e) {
-            // shouldn't happen
-            e.printStackTrace();
-        } catch(IllegalAccessException e) {
-            // shouldn't happen
-            e.printStackTrace();
-        }
-        return null;
     }
 }

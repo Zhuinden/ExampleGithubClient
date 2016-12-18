@@ -5,6 +5,7 @@ import android.os.Parcelable;
 import com.google.auto.value.AutoValue;
 import com.zhuinden.examplegithubclient.R;
 import com.zhuinden.examplegithubclient.util.Layout;
+import com.zhuinden.examplegithubclient.util.LeftDrawerEnabled;
 import com.zhuinden.examplegithubclient.util.Title;
 
 /**
@@ -14,6 +15,7 @@ import com.zhuinden.examplegithubclient.util.Title;
 @AutoValue
 @Title(R.string.title_repository_details)
 @Layout(R.layout.path_repositorydetails)
+@LeftDrawerEnabled(false)
 public abstract class RepositoryDetailsKey
         implements Parcelable {
     public static RepositoryDetailsKey create() {

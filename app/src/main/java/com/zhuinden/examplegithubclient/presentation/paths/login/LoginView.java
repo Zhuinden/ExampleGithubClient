@@ -1,26 +1,37 @@
 package com.zhuinden.examplegithubclient.presentation.paths.login;
 
 import android.annotation.TargetApi;
+import android.app.ProgressDialog;
 import android.content.Context;
+import android.text.Editable;
 import android.util.AttributeSet;
-import android.view.View;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.zhuinden.examplegithubclient.R;
 import com.zhuinden.examplegithubclient.presentation.paths.repositories.RepositoriesKey;
+import com.zhuinden.examplegithubclient.util.DaggerService;
+
+import javax.inject.Inject;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
+import butterknife.OnTextChanged;
+import flowless.ActivityUtils;
+import flowless.Direction;
 import flowless.Flow;
+import flowless.History;
+import flowless.preset.FlowLifecycles;
 
 /**
  * Created by Zhuinden on 2016.12.10..
  */
 
 public class LoginView
-        extends RelativeLayout {
+        extends RelativeLayout
+        implements LoginPresenter.ViewContract, FlowLifecycles.ViewLifecycleListener {
     public LoginView(Context context) {
         super(context);
         init();
@@ -44,9 +55,13 @@ public class LoginView
 
     public void init() {
         if(!isInEditMode()) {
-            // .
+            LoginComponent loginComponent = DaggerService.getComponent(getContext());
+            loginComponent.inject(this);
         }
     }
+
+    @Inject
+    LoginPresenter loginPresenter;
 
     @BindView(R.id.login_username)
     TextView username;
@@ -54,11 +69,22 @@ public class LoginView
     @BindView(R.id.login_password)
     TextView password;
 
-    @OnClick(R.id.login_login)
-    public void login(View view) {
-        // TODO: add actual logic
-        Flow.get(this).set(RepositoriesKey.create()); // TODO: move to presenter/routing layer
+    @OnTextChanged(R.id.login_username)
+    public void onUsernameChanged(Editable username) {
+        loginPresenter.updateUsername(username.toString());
     }
+
+    @OnTextChanged(R.id.login_password)
+    public void onPasswordChanged(Editable password) {
+        loginPresenter.updatePassword(password.toString());
+    }
+
+    @OnClick(R.id.login_login)
+    public void login() {
+        loginPresenter.login();
+    }
+
+    ProgressDialog progressDialog;
 
     @Override
     protected void onFinishInflate() {
@@ -66,5 +92,53 @@ public class LoginView
         if(!isInEditMode()) {
             ButterKnife.bind(this);
         }
+    }
+
+    @Override
+    public void handleLoginSuccess() {
+        Flow.get(this).setHistory(History.single(RepositoriesKey.create()), Direction.FORWARD);
+    }
+
+    @Override
+    public void handleLoginError() {
+        Toast.makeText(getContext(), R.string.failed_to_login, Toast.LENGTH_SHORT).show();
+    }
+
+    @Override
+    public void setUsername(String username) {
+        this.username.setText(username);
+    }
+
+    @Override
+    public void setPassword(String password) {
+        this.password.setText(password);
+    }
+
+    @Override
+    public void showLoading() {
+        hideLoading();
+        progressDialog = new ProgressDialog(ActivityUtils.getActivity(getContext()));
+        progressDialog.setMessage(getContext().getString(R.string.please_wait));
+        progressDialog.setIndeterminate(true);
+        progressDialog.show();
+    }
+
+    @Override
+    public void hideLoading() {
+        if(progressDialog != null) {
+            progressDialog.hide();
+            progressDialog.dismiss();
+            progressDialog = null;
+        }
+    }
+
+    @Override
+    public void onViewRestored() {
+        loginPresenter.attachView(this);
+    }
+
+    @Override
+    public void onViewDestroyed(boolean removedByFlow) {
+        loginPresenter.detachView();
     }
 }

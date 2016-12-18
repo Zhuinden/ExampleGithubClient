@@ -10,7 +10,7 @@ import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
 import com.zhuinden.examplegithubclient.R;
-import com.zhuinden.examplegithubclient.application.injection.MainActivityComponent;
+import com.zhuinden.examplegithubclient.presentation.activity.main.MainComponent;
 import com.zhuinden.examplegithubclient.presentation.activity.main.MainKey;
 import com.zhuinden.examplegithubclient.presentation.activity.main.MainPresenter;
 import com.zhuinden.examplegithubclient.util.DaggerService;
@@ -56,7 +56,7 @@ public class LeftDrawerAdapter
         @OnClick(R.id.left_drawer_item)
         public void onClickDrawerItem(View view) {
             Object newKey = leftDrawerItem.getKeyCreator().createKey();
-            MainActivityComponent component = Flow.get(context).getServices()
+            MainComponent component = Flow.get(context).getServices()
                     .getService(MainKey.KEY, DaggerService.TAG);
             MainPresenter mainPresenter = component.mainPresenter();
             mainPresenter.goToKey(Flow.get(view), newKey);

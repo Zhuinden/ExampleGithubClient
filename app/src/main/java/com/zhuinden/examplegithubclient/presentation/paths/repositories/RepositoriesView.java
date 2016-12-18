@@ -2,27 +2,30 @@ package com.zhuinden.examplegithubclient.presentation.paths.repositories;
 
 import android.annotation.TargetApi;
 import android.content.Context;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.util.AttributeSet;
-import android.util.Log;
 import android.widget.RelativeLayout;
 
+import com.zhuinden.examplegithubclient.R;
 import com.zhuinden.examplegithubclient.domain.data.response.repositories.Repository;
-import com.zhuinden.examplegithubclient.domain.interactor.GetRepositoriesInteractor;
 import com.zhuinden.examplegithubclient.util.DaggerService;
 
 import java.util.List;
 
 import javax.inject.Inject;
 
-import bolts.Task;
+import butterknife.BindView;
 import butterknife.ButterKnife;
+import flowless.preset.FlowLifecycles;
 
 /**
  * Created by Zhuinden on 2016.12.10..
  */
 
 public class RepositoriesView
-        extends RelativeLayout {
+        extends RelativeLayout
+        implements FlowLifecycles.ViewLifecycleListener, RepositoriesPresenter.ViewContract {
     public RepositoriesView(Context context) {
         super(context);
         init();
@@ -51,21 +54,37 @@ public class RepositoriesView
         }
     }
 
+    @BindView(R.id.repositories_recycler)
+    RecyclerView recyclerView;
+
     @Inject
-    GetRepositoriesInteractor getRepositoriesInteractor;
+    RepositoriesPresenter repositoriesPresenter;
+
+    RepositoriesAdapter repositoriesAdapter;
 
     @Override
     protected void onFinishInflate() {
         super.onFinishInflate();
         if(!isInEditMode()) {
             ButterKnife.bind(this);
-            getRepositoriesInteractor.getRepositories("Zhuinden").continueWith(task -> {
-                List<Repository> repositories = task.getResult();
-                for(Repository repository : repositories) {
-                    Log.i("RepositoriesView", repository.getName());
-                }
-                return null;
-            }, Task.UI_THREAD_EXECUTOR);
+            repositoriesAdapter = new RepositoriesAdapter(getContext());
+            recyclerView.setAdapter(repositoriesAdapter);
+            recyclerView.setLayoutManager(new LinearLayoutManager(getContext(), RecyclerView.VERTICAL, false));
         }
+    }
+
+    @Override
+    public void onViewRestored() {
+        repositoriesPresenter.attachView(this);
+    }
+
+    @Override
+    public void onViewDestroyed(boolean removedByFlow) {
+        repositoriesPresenter.detachView();
+    }
+
+    @Override
+    public void updateRepositories(List<Repository> repositories) {
+        repositoriesAdapter.updateRepositories();
     }
 }

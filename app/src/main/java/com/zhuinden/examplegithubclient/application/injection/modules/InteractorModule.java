@@ -1,7 +1,9 @@
 package com.zhuinden.examplegithubclient.application.injection.modules;
 
 import com.zhuinden.examplegithubclient.domain.interactor.GetRepositoriesInteractor;
+import com.zhuinden.examplegithubclient.domain.interactor.LoginInteractor;
 import com.zhuinden.examplegithubclient.domain.interactor.impl.GetRepositoriesInteractorImpl;
+import com.zhuinden.examplegithubclient.domain.interactor.impl.LoginInteractorImpl;
 
 import dagger.Binds;
 import dagger.Module;
@@ -14,4 +16,7 @@ import dagger.Module;
 public abstract class InteractorModule {
     @Binds
     abstract GetRepositoriesInteractor getRepositoriesInteractor(GetRepositoriesInteractorImpl getRepositoriesInteractor);
+
+    @Binds
+    abstract LoginInteractor loginInteractor(LoginInteractorImpl loginInteractor);
 }

@@ -11,4 +11,6 @@
     <string name="username">Username</string>
     <string name="password">Password</string>
     <string name="text_login">LOGIN</string>
+    <string name="failed_to_login">Failed to log in.</string>
+    <string name="please_wait">Please wait&#8230;</string>
 </resources>
