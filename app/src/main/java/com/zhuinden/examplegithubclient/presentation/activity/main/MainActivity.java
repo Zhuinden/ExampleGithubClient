@@ -155,9 +155,13 @@ public class MainActivity
 
     @Override
     public void onBackPressed() {
-        if(!transitionDispatcher.onBackPressed()) {
-            super.onBackPressed();
+        if(mainPresenter.onBackPressed()) {
+            return;
         }
+        if(transitionDispatcher.onBackPressed()) {
+            return;
+        }
+        super.onBackPressed();
     }
 
     @Override

@@ -42,6 +42,14 @@ public class MainPresenter
         }
     }
 
+    public boolean onBackPressed() {
+        if(isDrawerOpen) {
+            closeDrawer();
+            return true;
+        }
+        return false;
+    }
+
     public interface ViewContract
             extends Presenter.ViewContract {
         void openDrawer();
