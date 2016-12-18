@@ -39,6 +39,13 @@ public class TransitionDispatcher extends SingleRootDispatcher {
         DispatcherUtils.persistViewToStateAndNotifyRemoval(traversal, previousView);
 
         Flow flow = Flow.get(baseContext);
+        if(traversal.origin != null) {
+            for(Object key : traversal.origin) { // retain only current key's services
+                if(!newKey.equals(key)) {
+                    flow.getServices().unbindServices(key);
+                }
+            }
+        }
         for(Object key : traversal.destination) { // retain only current key's services
             if(!newKey.equals(key)) {
                 flow.getServices().unbindServices(key);
