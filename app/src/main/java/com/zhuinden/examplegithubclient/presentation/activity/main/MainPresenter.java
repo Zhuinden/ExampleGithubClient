@@ -34,6 +34,7 @@ public class MainPresenter
     }
 
     public void goToKey(Flow flow, Object newKey) {
+        closeDrawer();
         if(newKey instanceof LoginKey) {
             flow.setHistory(History.single(newKey), Direction.FORWARD);
         } else {

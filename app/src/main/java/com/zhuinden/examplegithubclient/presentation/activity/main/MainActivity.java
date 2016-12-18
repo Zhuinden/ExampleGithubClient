@@ -29,7 +29,9 @@ import butterknife.ButterKnife;
 import butterknife.OnClick;
 import flowless.Dispatcher;
 import flowless.Flow;
+import flowless.KeyManager;
 import flowless.ServiceProvider;
+import flowless.State;
 import flowless.Traversal;
 import flowless.TraversalCallback;
 import flowless.preset.DispatcherUtils;
@@ -75,19 +77,18 @@ public class MainActivity
         transitionDispatcher = new TransitionDispatcher(this);
         newBase = Flow.configure(newBase, this) //
                 .defaultKey(LoginKey.create()) //
+                .globalKey(MainKey.KEY)
                 .dispatcher(this) //
                 .install(); //
         transitionDispatcher.setBaseContext(newBase);
         super.attachBaseContext(newBase);
     }
 
-    private Bundle tempSavedInstanceState;
     private boolean didInject = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        tempSavedInstanceState = savedInstanceState;
         setContentView(R.layout.activity_main);
         ButterKnife.bind(this);
         setSupportActionBar(hiddenToolbar);
@@ -111,33 +112,31 @@ public class MainActivity
         //drawerLayout.setScrimColor(ContextCompat.getColor(this, android.R.color.transparent));
     }
 
-    private void injectServices(Bundle savedInstanceState) {
+    private void injectServices() {
         if(didInject) {
             return;
         }
         didInject = true;
-        if(savedInstanceState == null) { // need to get bundle between onPostCreate and after onCreate
-            savedInstanceState = tempSavedInstanceState;
-        }
-        ServiceProvider serviceProvider = Flow.get(getBaseContext()).getServices();
+        Flow flow = Flow.get(getBaseContext());
+        ServiceProvider serviceProvider = flow.getServices();
+        MainKey mainKey = Flow.getKey(getBaseContext());
         MainActivityComponent mainActivityComponent;
-        if(!serviceProvider.hasService(MainKey.KEY, DaggerService.TAG)) {
+        if(!serviceProvider.hasService(mainKey, DaggerService.TAG)) {
             mainActivityComponent = DaggerMainActivityComponent.create();
-            serviceProvider.bindService(MainKey.KEY, DaggerService.TAG, mainActivityComponent);
+            serviceProvider.bindService(mainKey, DaggerService.TAG, mainActivityComponent);
         } else {
-            mainActivityComponent = DaggerService.getComponent(getBaseContext(), MainKey.KEY);
+            mainActivityComponent = DaggerService.getComponent(getBaseContext(), mainKey);
         }
         mainActivityComponent.inject(this);
-        if(savedInstanceState != null) {
-            mainPresenter.fromBundle(savedInstanceState.getBundle("PRESENTER_STATE"));
-        }
+        KeyManager keyManager = flow.getStates();
+        State state = keyManager.getState(mainKey);
+        mainPresenter.fromBundle(state.getBundle());
     }
 
     @Override
     protected void onPostCreate(Bundle savedInstanceState) {
         super.onPostCreate(savedInstanceState);
-        tempSavedInstanceState = null;
-        injectServices(savedInstanceState);
+        injectServices();
         mainPresenter.attachView(this);
         actionBarDrawerToggle.syncState();
     }
@@ -164,8 +163,11 @@ public class MainActivity
     @Override
     protected void onSaveInstanceState(Bundle outState) {
         transitionDispatcher.preSaveViewState();
+        Flow flow = Flow.get(getBaseContext());
+        KeyManager keyManager = flow.getStates();
+        State state = keyManager.getState(Flow.getKey(getBaseContext()));
+        state.setBundle(mainPresenter.toBundle());
         super.onSaveInstanceState(outState);
-        outState.putBundle("PRESENTER_STATE", mainPresenter.toBundle());
     }
 
     @Override
@@ -197,8 +199,7 @@ public class MainActivity
 
     @Override
     public void dispatch(@NonNull Traversal traversal, @NonNull TraversalCallback callback) {
-        injectServices(null);
-        mainPresenter.closeDrawer();
+        injectServices();
 
         Object newKey = DispatcherUtils.getNewKey(traversal);
         mainPresenter.setTitle(getString(annotationCache.getTitle(newKey)));
@@ -210,10 +211,11 @@ public class MainActivity
     public Object getSystemService(String name) {
         try {
             Flow flow = Flow.get(getBaseContext());
-            if(flow.getServices().hasService(MainKey.KEY, name)) {
-                return flow.getServices().getService(MainKey.KEY, name);
+            MainKey mainKey = Flow.getKey(getBaseContext());
+            if(flow.getServices().hasService(mainKey, name)) {
+                return flow.getServices().getService(mainKey, name);
             }
-        } catch(IllegalStateException e) { // TODO: Flow does not exist at this point
+        } catch(IllegalStateException e) { // Flow might not exist at this point
         }
         return super.getSystemService(name);
     }

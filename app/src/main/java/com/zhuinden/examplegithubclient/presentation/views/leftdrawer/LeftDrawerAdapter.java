@@ -1,7 +1,6 @@
 package com.zhuinden.examplegithubclient.presentation.views.leftdrawer;
 
 import android.content.Context;
-import android.content.ContextWrapper;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -60,7 +59,7 @@ public class LeftDrawerAdapter
             MainActivityComponent component = Flow.get(context).getServices()
                     .getService(MainKey.KEY, DaggerService.TAG);
             MainPresenter mainPresenter = component.mainPresenter();
-            mainPresenter.goToKey(Flow.get(((ContextWrapper) context).getBaseContext()), newKey);
+            mainPresenter.goToKey(Flow.get(view), newKey);
         }
 
         public LeftDrawerViewHolder(View itemView) {
