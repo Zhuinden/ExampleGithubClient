@@ -1,8 +1,6 @@
 package com.zhuinden.examplegithubclient;
 
 
-import com.zhuinden.examplegithubclient.presentation.activity.main.MainActivity;
-
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
@@ -17,9 +15,6 @@ import static org.assertj.core.api.Assertions.assertThat;
  * @see <a href="http://d.android.com/tools/testing">Testing documentation</a>
  */
 public class ExampleUnitTest {
-
-    MainActivity activity;
-
     @Rule
     public MockitoRule mockitoRule = MockitoJUnit.rule();
 

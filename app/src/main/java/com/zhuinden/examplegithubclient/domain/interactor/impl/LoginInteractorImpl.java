@@ -1,5 +1,6 @@
 package com.zhuinden.examplegithubclient.domain.interactor.impl;
 
+import com.zhuinden.examplegithubclient.application.BoltsExecutors;
 import com.zhuinden.examplegithubclient.application.injection.ActivityScope;
 import com.zhuinden.examplegithubclient.domain.interactor.LoginInteractor;
 
@@ -20,9 +21,9 @@ public class LoginInteractorImpl
 
     @Override
     public Task<Boolean> login(String username, String password) {
-        return Task.callInBackground(() -> {
+        return Task.call(() -> {
             Thread.sleep(3250); // simulate login
             return true;
-        });
+        }, BoltsExecutors.BACKGROUND_THREAD);
     }
 }

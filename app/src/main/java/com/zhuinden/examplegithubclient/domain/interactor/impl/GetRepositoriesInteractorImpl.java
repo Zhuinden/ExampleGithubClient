@@ -1,5 +1,6 @@
 package com.zhuinden.examplegithubclient.domain.interactor.impl;
 
+import com.zhuinden.examplegithubclient.application.BoltsExecutors;
 import com.zhuinden.examplegithubclient.application.injection.ActivityScope;
 import com.zhuinden.examplegithubclient.domain.data.response.repositories.Repository;
 import com.zhuinden.examplegithubclient.domain.interactor.GetRepositoriesInteractor;
@@ -26,6 +27,6 @@ public class GetRepositoriesInteractorImpl
 
     @Override
     public Task<List<Repository>> getRepositories(final String user, int page) {
-        return Task.callInBackground(() -> githubService.getRepositories(user, page));
+        return Task.call(() -> githubService.getRepositories(user, page), BoltsExecutors.BACKGROUND_THREAD);
     }
 }

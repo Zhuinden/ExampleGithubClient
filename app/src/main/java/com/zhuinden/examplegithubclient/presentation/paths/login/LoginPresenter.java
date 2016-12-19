@@ -3,13 +3,14 @@ package com.zhuinden.examplegithubclient.presentation.paths.login;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 
+import com.zhuinden.examplegithubclient.application.BoltsExecutors;
 import com.zhuinden.examplegithubclient.application.injection.KeyScope;
 import com.zhuinden.examplegithubclient.domain.interactor.LoginInteractor;
 import com.zhuinden.examplegithubclient.util.BasePresenter;
 
 import javax.inject.Inject;
 
-import bolts.Task;
+import bolts.Continuation;
 import flowless.Bundleable;
 
 /**
@@ -20,6 +21,7 @@ import flowless.Bundleable;
 public class LoginPresenter
         extends BasePresenter<LoginPresenter.ViewContract>
         implements Bundleable {
+
     @Inject
     LoginInteractor loginInteractor;
 
@@ -68,17 +70,19 @@ public class LoginPresenter
 
     public void login() {
         showLoading();
-        loginInteractor.login(username, password).continueWith(task -> {
-            hideLoading();
-            Boolean result = task.getResult();
-            if(result) {
-                view.handleLoginSuccess(); // can View be null here?
-            } else {
-                view.handleLoginError();
-            }
-            return null;
-        }, Task.UI_THREAD_EXECUTOR);
+        loginInteractor.login(username, password).continueWith(loginCallback, BoltsExecutors.UI_THREAD);
     }
+
+    Continuation<Boolean, Object> loginCallback = task -> {
+        hideLoading();
+        Boolean result = task.getResult();
+        if(result) {
+            view.handleLoginSuccess(); // can View be null here?
+        } else {
+            view.handleLoginError();
+        }
+        return null;
+    };
 
     private void showLoading() {
         isLoading = true;
