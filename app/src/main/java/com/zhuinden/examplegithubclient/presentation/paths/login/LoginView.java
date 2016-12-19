@@ -123,6 +123,7 @@ public class LoginView
         progressDialog = new ProgressDialog(ActivityUtils.getActivity(getContext()));
         progressDialog.setMessage(getContext().getString(R.string.please_wait));
         progressDialog.setIndeterminate(true);
+        progressDialog.setCancelable(false);
         progressDialog.show();
     }
 
