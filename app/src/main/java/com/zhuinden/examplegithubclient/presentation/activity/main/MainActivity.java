@@ -3,6 +3,7 @@ package com.zhuinden.examplegithubclient.presentation.activity.main;
 import android.content.res.Configuration;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.annotation.StringRes;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.widget.Toolbar;
@@ -17,8 +18,6 @@ import com.zhuinden.examplegithubclient.util.AnnotationCache;
 import com.zhuinden.examplegithubclient.util.DaggerService;
 import com.zhuinden.examplegithubclient.util.FlowlessActivity;
 
-import java.util.Set;
-
 import javax.inject.Inject;
 
 import butterknife.BindView;
@@ -30,7 +29,6 @@ import flowless.ServiceProvider;
 import flowless.State;
 import flowless.Traversal;
 import flowless.TraversalCallback;
-import flowless.preset.DispatcherUtils;
 
 public class MainActivity
         extends FlowlessActivity
@@ -72,12 +70,34 @@ public class MainActivity
         onBackPressed();
     }
 
-    private void disableLeftDrawer() {
+    @Override
+    public void disableLeftDrawer() {
         drawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED);
     }
 
-    private void enableLeftDrawer() {
+    @Override
+    public void enableLeftDrawer() {
         drawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_UNLOCKED);
+    }
+
+    @Override
+    public void hideDrawerToggle() {
+        drawerToggle.setVisibility(View.GONE);
+    }
+
+    @Override
+    public void showDrawerToggle() {
+        drawerToggle.setVisibility(View.VISIBLE);
+    }
+
+    @Override
+    public void hideToolbarGoPrevious() {
+        toolbarGoPrevious.setVisibility(View.GONE);
+    }
+
+    @Override
+    public void showToolbarGoPrevious() {
+        toolbarGoPrevious.setVisibility(View.VISIBLE);
     }
 
     ActionBarDrawerToggle actionBarDrawerToggle;
@@ -191,7 +211,7 @@ public class MainActivity
     }
 
     @Override
-    public void setTitle(String title) {
+    public void setTitle(@StringRes int title) {
         toolbarText.setText(title);
     }
 
@@ -199,28 +219,7 @@ public class MainActivity
     public void dispatch(@NonNull Traversal traversal, @NonNull TraversalCallback callback) {
         injectServices();
 
-        Object newKey = DispatcherUtils.getNewKey(traversal);
-        mainPresenter.setTitle(getString(annotationCache.getTitle(newKey)));
-        boolean isLeftDrawerEnabled = annotationCache.getLeftDrawerEnabled(newKey);
-        if(isLeftDrawerEnabled) {
-            enableLeftDrawer();
-        } else {
-            disableLeftDrawer();
-        }
-
-        boolean isToolbarButtonVisible = annotationCache.getToolbarButtonVisibility(newKey);
-        Set<Class<?>> parents = annotationCache.getChildOf(newKey);
-        if(parents.size() > 0) {
-            drawerToggle.setVisibility(View.GONE);
-            toolbarGoPrevious.setVisibility(View.VISIBLE);
-        } else {
-            if(isToolbarButtonVisible) {
-                drawerToggle.setVisibility(View.VISIBLE);
-            } else {
-                drawerToggle.setVisibility(View.GONE);
-            }
-            toolbarGoPrevious.setVisibility(View.GONE);
-        }
+        mainPresenter.dispatch(traversal, callback);
 
         transitionDispatcher.dispatch(traversal, callback);
     }
