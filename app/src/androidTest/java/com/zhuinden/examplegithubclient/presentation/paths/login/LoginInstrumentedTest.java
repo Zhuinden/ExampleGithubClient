@@ -3,8 +3,6 @@ package com.zhuinden.examplegithubclient.presentation.paths.login;
 import android.app.Instrumentation;
 import android.support.test.InstrumentationRegistry;
 import android.support.test.espresso.action.ViewActions;
-import android.support.test.espresso.assertion.ViewAssertions;
-import android.support.test.espresso.matcher.ViewMatchers;
 import android.support.test.rule.ActivityTestRule;
 import android.support.test.runner.AndroidJUnit4;
 
@@ -24,6 +22,8 @@ import flowless.Direction;
 import flowless.Flow;
 import flowless.History;
 import flowless.ServiceProvider;
+
+import static org.assertj.core.api.Assertions.assertThat;
 
 /**
  * Instrumentation test, which will execute on an Android device.
@@ -60,7 +60,7 @@ public class LoginInstrumentedTest {
 
     @Test
     public void assertLoginViewIsActive() {
-        mainPage.root().check(ViewAssertions.matches(ViewMatchers.hasDescendant(ViewMatchers.isAssignableFrom(LoginView.class))));
+        mainPage.checkRootChildIs(LoginView.class);
     }
 
     @Test
@@ -72,9 +72,12 @@ public class LoginInstrumentedTest {
     public void assertGoesToRepositoryAfterSuccessfulLogin()
             throws Exception {
         loginPage.username().perform(ViewActions.typeText("hello"));
+        assertThat(loginPresenter.username).isEqualTo("hello");
         loginPage.password().perform(ViewActions.typeText("world"));
+        assertThat(loginPresenter.password).isEqualTo("world");
+
         loginPage.loginButton().perform(ViewActions.click());
         ConditionWatcher.waitForCondition(new LoginWaitForDialogInstruction(loginPresenter));
-        mainPage.root().check(ViewAssertions.matches(ViewMatchers.hasDescendant(ViewMatchers.isAssignableFrom(RepositoriesView.class))));
+        mainPage.checkRootChildIs(RepositoriesView.class);
     }
 }

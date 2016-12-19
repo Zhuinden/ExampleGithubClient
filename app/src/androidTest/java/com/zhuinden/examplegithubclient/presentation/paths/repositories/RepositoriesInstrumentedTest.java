@@ -3,8 +3,6 @@ package com.zhuinden.examplegithubclient.presentation.paths.repositories;
 
 import android.app.Instrumentation;
 import android.support.test.InstrumentationRegistry;
-import android.support.test.espresso.assertion.ViewAssertions;
-import android.support.test.espresso.matcher.ViewMatchers;
 import android.support.test.rule.ActivityTestRule;
 import android.support.test.runner.AndroidJUnit4;
 
@@ -50,9 +48,8 @@ public class RepositoriesInstrumentedTest {
 
     @Test
     public void assertRepositoriesViewIsActive() {
-        mainPage.root().check(ViewAssertions.matches(ViewMatchers.hasDescendant(ViewMatchers.isAssignableFrom(RepositoriesView.class))));
+        mainPage.checkRootChildIs(RepositoriesView.class);
     }
-
 
     @Test
     public void assertRepositoriesViewHasRepositoriesKey() {

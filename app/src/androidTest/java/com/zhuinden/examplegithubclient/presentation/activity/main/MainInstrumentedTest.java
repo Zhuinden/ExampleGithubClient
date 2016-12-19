@@ -60,7 +60,7 @@ public class MainInstrumentedTest {
 
     @Test
     public void assertDefaultViewIsLogin() {
-        mainPage.root().check(ViewAssertions.matches(ViewMatchers.hasDescendant(ViewMatchers.isAssignableFrom(LoginView.class))));
+        mainPage.checkRootChildIs(LoginView.class);
     }
 
     @Test

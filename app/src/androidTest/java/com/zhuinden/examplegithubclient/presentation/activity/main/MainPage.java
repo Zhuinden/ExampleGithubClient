@@ -3,7 +3,9 @@ package com.zhuinden.examplegithubclient.presentation.activity.main;
 import android.support.test.espresso.Espresso;
 import android.support.test.espresso.ViewInteraction;
 import android.support.test.espresso.action.ViewActions;
+import android.support.test.espresso.assertion.ViewAssertions;
 import android.support.test.espresso.matcher.ViewMatchers;
+import android.view.View;
 
 import com.zhuinden.examplegithubclient.R;
 
@@ -18,6 +20,10 @@ public class MainPage {
 
     public ViewInteraction root() {
         return Espresso.onView(ViewMatchers.withId(R.id.root));
+    }
+
+    public void checkRootChildIs(Class<? extends View> clazz) {
+        root().check(ViewAssertions.matches(ViewMatchers.hasDescendant(ViewMatchers.isAssignableFrom(clazz))));
     }
 
     public ViewInteraction hiddenToolbar() {
