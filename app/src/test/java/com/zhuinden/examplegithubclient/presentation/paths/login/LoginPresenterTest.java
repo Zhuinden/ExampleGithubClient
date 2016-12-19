@@ -132,6 +132,8 @@ public class LoginPresenterTest {
         loginPresenter.login();
 
         // then
+        Mockito.verify(viewContract).showLoading();
+        Mockito.verify(viewContract, Mockito.atLeastOnce()).hideLoading();
         Mockito.verify(viewContract).handleLoginSuccess();
     }
 
@@ -148,6 +150,8 @@ public class LoginPresenterTest {
         loginPresenter.login();
 
         // then
+        Mockito.verify(viewContract).showLoading();
+        Mockito.verify(viewContract, Mockito.atLeastOnce()).hideLoading();
         Mockito.verify(viewContract).handleLoginError();
     }
 }
