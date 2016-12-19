@@ -35,14 +35,41 @@ public class RepositoriesPresenter
         void openRepository(String url);
     }
 
-    @Override
-    protected void initializeView(ViewContract view) {
-        if(repositories == null) {
-            getRepositoriesInteractor.getRepositories("square").continueWith(task -> {
-                repositories = task.getResult();
+    private int currentPage = 1;
+
+    private boolean isDownloading;
+    private boolean downloadedAll;
+
+    public boolean didDownloadAll() {
+        return downloadedAll;
+    }
+
+    private void downloadPage() {
+        if(!downloadedAll) {
+            isDownloading = true;
+            getRepositoriesInteractor.getRepositories("square", currentPage).continueWith(task -> {
+                isDownloading = false;
+                List<Repository> repositories = task.getResult();
+                if(this.repositories == null) { // should be in data layer
+                    this.repositories = repositories;
+                } else {
+                    this.repositories.addAll(repositories);
+                }
+                if(repositories.size() <= 0) {
+                    downloadedAll = true;
+                } else {
+                    currentPage++;
+                }
                 updateRepositoriesInView(); // TODO: can View be null here?
                 return null;
             }, Task.UI_THREAD_EXECUTOR);
+        }
+    }
+
+    @Override
+    protected void initializeView(ViewContract view) {
+        if(repositories == null) {
+            downloadPage();
         } else {
             updateRepositoriesInView();
         }
@@ -58,5 +85,11 @@ public class RepositoriesPresenter
 
     public void openRepository(Repository repository) {
         view.openRepository(repository.getUrl());
+    }
+
+    public void downloadMore() {
+        if(!isDownloading) {
+            downloadPage();
+        }
     }
 }

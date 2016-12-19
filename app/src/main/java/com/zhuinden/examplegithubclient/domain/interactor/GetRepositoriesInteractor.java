@@ -11,5 +11,5 @@ import bolts.Task;
  */
 
 public interface GetRepositoriesInteractor {
-    Task<List<Repository>> getRepositories(String user);
+    Task<List<Repository>> getRepositories(String user, int page);
 }

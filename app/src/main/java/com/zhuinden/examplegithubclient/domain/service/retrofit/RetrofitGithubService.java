@@ -8,6 +8,7 @@ import java.util.List;
 import retrofit2.Call;
 import retrofit2.http.GET;
 import retrofit2.http.Path;
+import retrofit2.http.Query;
 
 /**
  * Created by Owner on 2016.12.10.
@@ -18,5 +19,5 @@ public interface RetrofitGithubService {
     Call<List<Organization>> getOrganizations(@Path("user") String user);
 
     @GET("users/{user}/repos")
-    Call<List<Repository>> getRepositories(@Path("user") String user);
+    Call<List<Repository>> getRepositories(@Path("user") String user, @Query("page") int page);
 }

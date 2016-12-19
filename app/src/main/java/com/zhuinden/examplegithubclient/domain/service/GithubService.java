@@ -14,6 +14,6 @@ public interface GithubService {
     List<Organization> getOrganizations(String user)
             throws IOException;
 
-    List<Repository> getRepositories(String user)
+    List<Repository> getRepositories(String user, int page)
             throws IOException;
 }

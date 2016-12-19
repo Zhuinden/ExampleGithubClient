@@ -25,7 +25,7 @@ public class GetRepositoriesInteractorImpl
     }
 
     @Override
-    public Task<List<Repository>> getRepositories(final String user) {
-        return Task.callInBackground(() -> githubService.getRepositories(user));
+    public Task<List<Repository>> getRepositories(final String user, int page) {
+        return Task.callInBackground(() -> githubService.getRepositories(user, page));
     }
 }

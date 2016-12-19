@@ -31,8 +31,8 @@ public class GithubServiceImpl
     }
 
     @Override
-    public List<Repository> getRepositories(String user)
+    public List<Repository> getRepositories(String user, int page)
             throws IOException {
-        return retrofitGithubService.getRepositories(user).execute().body();
+        return retrofitGithubService.getRepositories(user, page).execute().body();
     }
 }

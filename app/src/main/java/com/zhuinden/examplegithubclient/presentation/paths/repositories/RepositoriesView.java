@@ -72,6 +72,18 @@ public class RepositoriesView
             repositoriesAdapter = new RepositoriesAdapter(getContext());
             recyclerView.setAdapter(repositoriesAdapter);
             recyclerView.setLayoutManager(new LinearLayoutManager(getContext(), RecyclerView.VERTICAL, false));
+            recyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
+                @Override
+                public final void onScrolled(RecyclerView recyclerView, int dx, int dy) {
+                    if(!recyclerView.canScrollVertically(1)) {
+                        onScrolledToBottom();
+                    }
+                }
+
+                public void onScrolledToBottom() {
+                    repositoriesPresenter.downloadMore();
+                }
+            });
         }
     }
 

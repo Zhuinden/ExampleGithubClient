@@ -22,9 +22,12 @@ import butterknife.OnClick;
  */
 
 public class RepositoriesAdapter
-        extends RecyclerView.Adapter<RepositoriesAdapter.ViewHolder> {
+        extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
     @Inject
     RepositoriesPresenter repositoriesPresenter;
+
+    static final int ROW = 0;
+    static final int LOAD_MORE = 1;
 
     public RepositoriesAdapter(Context context) {
         RepositoriesComponent repositoriesComponent = DaggerService.getComponent(context);
@@ -32,18 +35,37 @@ public class RepositoriesAdapter
     }
 
     @Override
-    public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        return new ViewHolder(LayoutInflater.from(parent.getContext()).inflate(R.layout.view_repositories_row, parent, false));
+    public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+        if(viewType == ROW) {
+            return new ViewHolder(LayoutInflater.from(parent.getContext()).inflate(R.layout.view_repositories_row, parent, false));
+        } else if(viewType == LOAD_MORE) {
+            return new LoadMoreHolder(LayoutInflater.from(parent.getContext())
+                    .inflate(R.layout.view_repositories_load_more_row, parent, false));
+        }
+        throw new IllegalArgumentException("Invalid view type [" + viewType + "]");
     }
 
     @Override
-    public void onBindViewHolder(ViewHolder holder, int position) {
-        holder.bind(repositoriesPresenter.getRepositories().get(position));
+    public void onBindViewHolder(RecyclerView.ViewHolder abstractHolder, int position) {
+        if(abstractHolder instanceof ViewHolder) {
+            ViewHolder holder = (ViewHolder) abstractHolder;
+            holder.bind(repositoriesPresenter.getRepositories().get(position));
+        }
     }
 
     @Override
     public int getItemCount() {
-        return repositoriesPresenter.getRepositories() == null ? 0 : repositoriesPresenter.getRepositories().size();
+        return (repositoriesPresenter.getRepositories() == null ? 0 : repositoriesPresenter.getRepositories()
+                .size()) + (repositoriesPresenter.didDownloadAll() ? 0 : 1);
+    }
+
+    @Override
+    public int getItemViewType(int position) {
+        if((repositoriesPresenter.getRepositories() == null && position == 0) || (position == repositoriesPresenter.getRepositories()
+                .size()) && !repositoriesPresenter.didDownloadAll()) {
+            return LOAD_MORE;
+        }
+        return ROW;
     }
 
     public void updateRepositories() {
@@ -76,6 +98,13 @@ public class RepositoriesAdapter
         public void bind(Repository repository) {
             this.repository = repository;
             row.setText(repository.getName());
+        }
+    }
+
+    public static class LoadMoreHolder
+            extends RecyclerView.ViewHolder {
+        public LoadMoreHolder(View itemView) {
+            super(itemView);
         }
     }
 }
