@@ -56,7 +56,7 @@ public class LoginPresenter
     String username;
     String password;
 
-    private static boolean isLoading;
+    static boolean isLoading;
 
     public void updateUsername(String username) {
         this.username = username;
