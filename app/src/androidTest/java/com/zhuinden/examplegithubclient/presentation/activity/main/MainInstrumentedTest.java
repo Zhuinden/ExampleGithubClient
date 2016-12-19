@@ -1,4 +1,4 @@
-package com.zhuinden.examplegithubclient;
+package com.zhuinden.examplegithubclient.presentation.activity.main;
 
 
 import android.content.Context;
@@ -8,8 +8,6 @@ import android.support.test.espresso.matcher.ViewMatchers;
 import android.support.test.rule.ActivityTestRule;
 import android.support.test.runner.AndroidJUnit4;
 
-import com.zhuinden.examplegithubclient.presentation.activity.main.MainActivity;
-import com.zhuinden.examplegithubclient.presentation.activity.main.MainKey;
 import com.zhuinden.examplegithubclient.presentation.paths.login.LoginView;
 import com.zhuinden.examplegithubclient.util.DaggerService;
 import com.zhuinden.examplegithubclient.util.FlowViewAssertions;
@@ -27,7 +25,7 @@ import static org.assertj.core.api.Assertions.assertThat;
  * @see <a href="http://d.android.com/tools/testing">Testing documentation</a>
  */
 @RunWith(AndroidJUnit4.class)
-public class MainActivityInstrumentedTest {
+public class MainInstrumentedTest {
     @Rule
     public ActivityTestRule<MainActivity> mainActivityActivityTestRule = new ActivityTestRule<MainActivity>(MainActivity.class,
             true,

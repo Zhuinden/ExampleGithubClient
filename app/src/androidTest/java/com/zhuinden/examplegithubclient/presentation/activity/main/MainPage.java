@@ -1,9 +1,11 @@
-package com.zhuinden.examplegithubclient;
+package com.zhuinden.examplegithubclient.presentation.activity.main;
 
 import android.support.test.espresso.Espresso;
 import android.support.test.espresso.ViewInteraction;
 import android.support.test.espresso.action.ViewActions;
 import android.support.test.espresso.matcher.ViewMatchers;
+
+import com.zhuinden.examplegithubclient.R;
 
 /**
  * Created by Zhuinden on 2016.12.19..

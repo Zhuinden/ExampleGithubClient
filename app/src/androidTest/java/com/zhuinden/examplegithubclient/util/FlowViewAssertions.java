@@ -52,7 +52,7 @@ public final class FlowViewAssertions {
         public void check(View view, NoMatchingViewException noViewFoundException) {
             T key = Flow.getKey(view);
             if(key == null || !key.equals(this.key)) {
-                throw new AssertionError();
+                throw new AssertionError("Key [" + key + "] does not equal [" + this.key + "]");
             }
         }
     }
@@ -70,7 +70,7 @@ public final class FlowViewAssertions {
         @Override
         public void check(View view, NoMatchingViewException noViewFoundException) {
             if(Flow.get(view).getServices().hasService(view, serviceName) != shouldHaveService) {
-                throw new AssertionError();
+                throw new AssertionError("Service [" + serviceName + "] was " + (shouldHaveService ? "not" : "") + " found, even though it should" + (shouldHaveService ? "" : "n't") + " have been");
             }
         }
     }
