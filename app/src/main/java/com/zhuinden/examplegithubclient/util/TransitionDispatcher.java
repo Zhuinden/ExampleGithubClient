@@ -44,13 +44,7 @@ public class TransitionDispatcher extends SingleRootDispatcher {
         Flow flow = Flow.get(baseContext);
         if(traversal.origin != null) {
             for(Object key : traversal.origin) { // retain only current key's and parents' services
-                boolean hasParent = false;
-                for(Class<?> parentClass : parentClasses) {
-                    if(parentClass.isAssignableFrom(key.getClass())) {
-                        hasParent = true;
-                        break;
-                    }
-                }
+                boolean hasParent = evaluateIfHasParent(parentClasses, key);
                 if(!newKey.equals(key) && !hasParent) {
                     flow.getServices().unbindServices(key);
                 }
@@ -58,13 +52,7 @@ public class TransitionDispatcher extends SingleRootDispatcher {
         }
 
         for(Object key : traversal.destination) { // retain only current key's and parents' services
-            boolean hasParent = false;
-            for(Class<?> parentClass : parentClasses) {
-                if(parentClass.isAssignableFrom(key.getClass())) {
-                    hasParent = true;
-                    break;
-                }
-            }
+            boolean hasParent = evaluateIfHasParent(parentClasses, key);
             if(!newKey.equals(key) && !hasParent) {
                 flow.getServices().unbindServices(key);
             } else {
@@ -89,5 +77,16 @@ public class TransitionDispatcher extends SingleRootDispatcher {
         }
         root.addView(newView);
         callback.onTraversalCompleted();
+    }
+
+    private boolean evaluateIfHasParent(Set<Class<?>> parentClasses, Object key) {
+        boolean hasParent = false;
+        for(Class<?> parentClass : parentClasses) {
+            if(parentClass.isAssignableFrom(key.getClass())) {
+                hasParent = true;
+                break;
+            }
+        }
+        return hasParent;
     }
 }
