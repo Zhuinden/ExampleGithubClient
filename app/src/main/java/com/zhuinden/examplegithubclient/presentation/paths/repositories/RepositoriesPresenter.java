@@ -56,7 +56,7 @@ public class RepositoriesPresenter
         return repositories;
     }
 
-    public void openRepository(String url) {
-        view.openRepository(url);
+    public void openRepository(Repository repository) {
+        view.openRepository(repository.getUrl());
     }
 }

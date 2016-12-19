@@ -11,6 +11,8 @@ import dagger.Component;
 @KeyScope(RepositoriesKey.class)
 @Component(dependencies = MainComponent.class)
 public interface RepositoriesComponent {
+    RepositoriesPresenter repositoriesPresenter();
+
     void inject(RepositoriesView repositoriesView);
 
     void inject(RepositoriesAdapter repositoriesAdapter);

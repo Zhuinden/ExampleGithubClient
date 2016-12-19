@@ -40,18 +40,32 @@ public class TransitionDispatcher extends SingleRootDispatcher {
         final View previousView = root.getChildAt(0);
         DispatcherUtils.persistViewToStateAndNotifyRemoval(traversal, previousView);
 
-        Set<Object> parents = annotationCache.getChildOf(newKey);
+        Set<Class<?>> parentClasses = annotationCache.getChildOf(newKey);
         Flow flow = Flow.get(baseContext);
         if(traversal.origin != null) {
-            for(Object key : traversal.origin) { // retain only current key's services
-                if(!newKey.equals(key) && !parents.contains(key)) {
+            for(Object key : traversal.origin) { // retain only current key's and parents' services
+                boolean hasParent = false;
+                for(Class<?> parentClass : parentClasses) {
+                    if(parentClass.isAssignableFrom(key.getClass())) {
+                        hasParent = true;
+                        break;
+                    }
+                }
+                if(!newKey.equals(key) && !hasParent) {
                     flow.getServices().unbindServices(key);
                 }
             }
         }
 
         for(Object key : traversal.destination) { // retain only current key's and parents' services
-            if(!newKey.equals(key) && !parents.contains(key)) {
+            boolean hasParent = false;
+            for(Class<?> parentClass : parentClasses) {
+                if(parentClass.isAssignableFrom(key.getClass())) {
+                    hasParent = true;
+                    break;
+                }
+            }
+            if(!newKey.equals(key) && !hasParent) {
                 flow.getServices().unbindServices(key);
             } else {
                 if(!flow.getServices().hasService(key, DaggerService.TAG)) {

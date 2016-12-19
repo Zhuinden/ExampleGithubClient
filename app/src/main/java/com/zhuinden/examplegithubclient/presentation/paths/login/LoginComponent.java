@@ -11,5 +11,7 @@ import dagger.Component;
 @KeyScope(LoginKey.class)
 @Component(dependencies = MainComponent.class)
 public interface LoginComponent {
+    LoginPresenter loginPresenter();
+
     void inject(LoginView loginView);
 }

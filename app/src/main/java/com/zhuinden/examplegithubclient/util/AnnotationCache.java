@@ -111,7 +111,7 @@ public class AnnotationCache {
         return value;
     }
 
-    public Set<Object> getChildOf(Object path) {
+    public Set<Class<?>> getChildOf(Object path) {
         Class<?>[] value = getValueFromAnnotation(IS_CHILD_OF_CACHE, path, IsChildOf.class, true);
         if(value != null) {
             return new HashSet<>(Arrays.asList(value));

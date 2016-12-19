@@ -58,11 +58,11 @@ public class RepositoriesAdapter
         @BindView(R.id.repositories_row_text)
         TextView row;
 
-        private String url;
+        private Repository repository;
 
         @OnClick(R.id.repositories_row)
         public void rowClicked() {
-            repositoriesPresenter.openRepository(url);
+            repositoriesPresenter.openRepository(repository);
         }
 
         public ViewHolder(View itemView) {
@@ -74,7 +74,7 @@ public class RepositoriesAdapter
         }
 
         public void bind(Repository repository) {
-            url = repository.getUrl();
+            this.repository = repository;
             row.setText(repository.getName());
         }
     }

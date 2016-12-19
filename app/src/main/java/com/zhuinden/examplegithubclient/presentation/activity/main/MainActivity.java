@@ -203,7 +203,7 @@ public class MainActivity
         }
 
         boolean isToolbarButtonVisible = annotationCache.getToolbarButtonVisibility(newKey);
-        Set<Object> parents = annotationCache.getChildOf(newKey);
+        Set<Class<?>> parents = annotationCache.getChildOf(newKey);
         if(parents.size() > 0) {
             drawerToggle.setVisibility(View.GONE);
             toolbarGoPrevious.setVisibility(View.VISIBLE);

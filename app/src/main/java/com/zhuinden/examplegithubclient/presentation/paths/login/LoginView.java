@@ -3,6 +3,8 @@ package com.zhuinden.examplegithubclient.presentation.paths.login;
 import android.annotation.TargetApi;
 import android.app.ProgressDialog;
 import android.content.Context;
+import android.os.Bundle;
+import android.support.annotation.Nullable;
 import android.text.Editable;
 import android.util.AttributeSet;
 import android.widget.RelativeLayout;
@@ -20,6 +22,7 @@ import butterknife.ButterKnife;
 import butterknife.OnClick;
 import butterknife.OnTextChanged;
 import flowless.ActivityUtils;
+import flowless.Bundleable;
 import flowless.Direction;
 import flowless.Flow;
 import flowless.History;
@@ -31,7 +34,7 @@ import flowless.preset.FlowLifecycles;
 
 public class LoginView
         extends RelativeLayout
-        implements LoginPresenter.ViewContract, FlowLifecycles.ViewLifecycleListener {
+        implements LoginPresenter.ViewContract, FlowLifecycles.ViewLifecycleListener, Bundleable {
     public LoginView(Context context) {
         super(context);
         init();
@@ -140,5 +143,19 @@ public class LoginView
     @Override
     public void onViewDestroyed(boolean removedByFlow) {
         loginPresenter.detachView();
+    }
+
+    @Override
+    public Bundle toBundle() {
+        Bundle bundle = new Bundle();
+        bundle.putBundle("PRESENTER_STATE", loginPresenter.toBundle());
+        return bundle;
+    }
+
+    @Override
+    public void fromBundle(@Nullable Bundle bundle) {
+        if(bundle != null) {
+            loginPresenter.fromBundle(bundle.getBundle("PRESENTER_STATE"));
+        }
     }
 }

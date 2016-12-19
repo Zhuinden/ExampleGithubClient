@@ -5,6 +5,7 @@ import android.os.Parcelable;
 import com.google.auto.value.AutoValue;
 import com.zhuinden.examplegithubclient.R;
 import com.zhuinden.examplegithubclient.presentation.paths.repositories.RepositoriesKey;
+import com.zhuinden.examplegithubclient.util.ComponentFactory;
 import com.zhuinden.examplegithubclient.util.IsChildOf;
 import com.zhuinden.examplegithubclient.util.Layout;
 import com.zhuinden.examplegithubclient.util.LeftDrawerEnabled;
@@ -17,6 +18,7 @@ import com.zhuinden.examplegithubclient.util.Title;
 @AutoValue
 @Title(R.string.title_repository_details)
 @Layout(R.layout.path_repositorydetails)
+@ComponentFactory(RepositoryDetailsComponentFactory.class)
 @LeftDrawerEnabled(false)
 @IsChildOf(RepositoriesKey.class)
 public abstract class RepositoryDetailsKey
