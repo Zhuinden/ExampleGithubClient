@@ -77,17 +77,27 @@ public class LoginPresenterTest {
     @Test
     public void updateUsername()
             throws Exception {
-        String data = "Hello";
-        loginPresenter.updateUsername(data);
-        assertThat(loginPresenter.username).isEqualTo(data);
+        // given
+        loginPresenter.username = "";
+
+        // when
+        loginPresenter.updateUsername("Hello");
+
+        // then
+        assertThat(loginPresenter.username).isEqualTo("Hello");
     }
 
     @Test
     public void updatePassword()
             throws Exception {
-        String data = "World";
-        loginPresenter.updatePassword(data);
-        assertThat(loginPresenter.password).isEqualTo(data);
+        // given
+        loginPresenter.password = "";
+
+        // when
+        loginPresenter.updatePassword("World");
+
+        // then
+        assertThat(loginPresenter.password).isEqualTo("World");
     }
 
     @Test
@@ -101,6 +111,7 @@ public class LoginPresenterTest {
 
         Task<Boolean> task = Mockito.mock(Task.class);
         Mockito.when(loginInteractor.login("Hello", "World")).thenReturn(task);
+
         // when
         loginPresenter.login();
 
