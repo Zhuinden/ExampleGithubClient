@@ -6,8 +6,6 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 
-import com.zhuinden.examplegithubclient.presentation.paths.login.LoginKey;
-
 import flowless.Dispatcher;
 import flowless.Flow;
 
@@ -24,8 +22,9 @@ public abstract class FlowlessActivity
     protected void attachBaseContext(Context newBase) {
         transitionDispatcher = new TransitionDispatcher(this);
         newBase = Flow.configure(newBase, this) //
-                .defaultKey(LoginKey.create()) //
-                .globalKey(getGlobalKey()).dispatcher(this) //
+                .defaultKey(getDefaultKey()) //
+                .globalKey(getGlobalKey()) //
+                .dispatcher(this) //
                 .install(); //
         transitionDispatcher.setBaseContext(newBase);
         super.attachBaseContext(newBase);
@@ -58,4 +57,6 @@ public abstract class FlowlessActivity
     }
 
     protected abstract Object getGlobalKey();
+
+    protected abstract Object getDefaultKey();
 }

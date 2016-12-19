@@ -12,6 +12,7 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.zhuinden.examplegithubclient.R;
+import com.zhuinden.examplegithubclient.presentation.paths.login.LoginKey;
 import com.zhuinden.examplegithubclient.util.AnnotationCache;
 import com.zhuinden.examplegithubclient.util.DaggerService;
 import com.zhuinden.examplegithubclient.util.FlowlessActivity;
@@ -107,6 +108,11 @@ public class MainActivity
     @Override
     protected Object getGlobalKey() {
         return MainKey.KEY;
+    }
+
+    @Override
+    protected Object getDefaultKey() {
+        return LoginKey.create();
     }
 
     @Override

@@ -138,6 +138,15 @@ dependencies {
         exclude module: 'recyclerview-v7'
     }
 
+    compile('com.android.support.test.espresso:espresso-idling-resource:2.2.2') {
+        exclude group: 'javax.inject'
+        exclude group: 'com.android.support', module: 'appcompat'
+        exclude group: 'com.android.support', module: 'support-annotations'
+        exclude group: 'com.android.support', module: 'support-v4'
+        exclude module: 'recyclerview-v7'
+        exclude module: 'design'
+    }
+
     androidTestCompile("com.android.support.test.espresso:espresso-contrib:2.2.2") {
         exclude group: 'javax.inject'
         exclude group: 'com.android.support', module: 'appcompat'
@@ -170,6 +179,7 @@ dependencies {
     //androidTestCompile 'com.google.dagger:dagger:2.7'
     //apt 'com.google.dagger:dagger-compiler:2.7'
     //provided 'org.glassfish:javax.annotation:10.0-b28'
+
 }
 
 configurations.all {
