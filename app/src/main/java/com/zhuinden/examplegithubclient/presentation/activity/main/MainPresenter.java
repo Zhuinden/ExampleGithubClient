@@ -54,8 +54,6 @@ public class MainPresenter
 
         void setTitle(@StringRes int resourceId);
 
-        String getString(@StringRes int resourceId);
-
         void enableLeftDrawer();
 
         void disableLeftDrawer();
