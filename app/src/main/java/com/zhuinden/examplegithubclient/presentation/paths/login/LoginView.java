@@ -144,6 +144,7 @@ public class LoginView
     @Override
     public void onViewDestroyed(boolean removedByFlow) {
         loginPresenter.detachView();
+        hideLoading();
     }
 
     @Override
