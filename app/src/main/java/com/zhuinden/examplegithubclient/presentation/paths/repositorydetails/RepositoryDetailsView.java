@@ -61,8 +61,7 @@ public class RepositoryDetailsView
             RepositoryDetailsComponent repositoryDetailsComponent = DaggerService.getComponent(getContext());
             repositoryDetailsComponent.inject(this);
 
-            Flow flow = Flow.get(getContext());
-            ServiceProvider serviceProvider = flow.getServices();
+            ServiceProvider serviceProvider = ServiceProvider.get(this);
             RepositoryDetailsKey repositoryDetailsKey = Flow.getKey(this);
             RepositoriesComponent repositoriesComponent = DaggerService.getComponent(getContext(), repositoryDetailsKey.parent());
             RepositoriesPresenter repositoriesPresenter = repositoriesComponent.repositoriesPresenter();

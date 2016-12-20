@@ -22,6 +22,7 @@ import android.support.test.espresso.ViewAssertion;
 import android.view.View;
 
 import flowless.Flow;
+import flowless.ServiceProvider;
 
 public final class FlowViewAssertions {
     private FlowViewAssertions() {
@@ -69,7 +70,7 @@ public final class FlowViewAssertions {
 
         @Override
         public void check(View view, NoMatchingViewException noViewFoundException) {
-            if(Flow.get(view).getServices().hasService(view, serviceName) != shouldHaveService) {
+            if(ServiceProvider.get(view).hasService(view, serviceName) != shouldHaveService) {
                 throw new AssertionError("Service [" + serviceName + "] was " + (shouldHaveService ? "not" : "") + " found, even though it should" + (shouldHaveService ? "" : "n't") + " have been");
             }
         }

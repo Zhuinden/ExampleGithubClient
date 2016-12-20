@@ -11,7 +11,7 @@ import com.transitionseverywhere.TransitionManager;
 
 import java.util.Set;
 
-import flowless.Flow;
+import flowless.ServiceProvider;
 import flowless.Traversal;
 import flowless.TraversalCallback;
 import flowless.preset.DispatcherUtils;
@@ -41,12 +41,12 @@ public class TransitionDispatcher extends SingleRootDispatcher {
         DispatcherUtils.persistViewToStateAndNotifyRemoval(traversal, previousView);
 
         Set<Class<?>> parentClasses = annotationCache.getChildOf(newKey);
-        Flow flow = Flow.get(baseContext);
+        ServiceProvider serviceProvider = ServiceProvider.get(baseContext);
         if(traversal.origin != null) {
             for(Object key : traversal.origin) { // retain only current key's and parents' services
                 boolean hasParent = evaluateIfHasParent(parentClasses, key);
                 if(!newKey.equals(key) && !hasParent) {
-                    flow.getServices().unbindServices(key);
+                    serviceProvider.unbindServices(key);
                 }
             }
         }
@@ -54,12 +54,12 @@ public class TransitionDispatcher extends SingleRootDispatcher {
         for(Object key : traversal.destination) { // retain only current key's and parents' services
             boolean hasParent = evaluateIfHasParent(parentClasses, key);
             if(!newKey.equals(key) && !hasParent) {
-                flow.getServices().unbindServices(key);
+                serviceProvider.unbindServices(key);
             } else {
-                if(!flow.getServices().hasService(key, DaggerService.TAG)) {
+                if(!serviceProvider.hasService(key, DaggerService.TAG)) {
                     ComponentFactory.FactoryMethod<?> componentFactory = annotationCache.getComponentFactory(key);
                     if(componentFactory != null) {
-                        flow.getServices().bindService(key, DaggerService.TAG, componentFactory.createComponent(baseContext));
+                        serviceProvider.bindService(key, DaggerService.TAG, componentFactory.createComponent(baseContext));
                     }
                 }
             }

@@ -109,8 +109,7 @@ public class MainActivity
             return;
         }
         didInject = true;
-        Flow flow = Flow.get(getBaseContext());
-        ServiceProvider serviceProvider = flow.getServices();
+        ServiceProvider serviceProvider = ServiceProvider.get(getBaseContext());
         MainKey mainKey = Flow.getKey(getBaseContext());
         MainComponent mainComponent;
         if(!serviceProvider.hasService(mainKey, DaggerService.TAG)) {
@@ -120,7 +119,7 @@ public class MainActivity
             mainComponent = DaggerService.getComponent(getBaseContext(), mainKey);
         }
         mainComponent.inject(this);
-        KeyManager keyManager = flow.getStates();
+        KeyManager keyManager = KeyManager.get(getBaseContext());
         State state = keyManager.getState(mainKey);
         mainPresenter.fromBundle(state.getBundle());
     }
@@ -193,8 +192,7 @@ public class MainActivity
 
     @Override
     protected void onSaveInstanceState(Bundle outState) {
-        Flow flow = Flow.get(getBaseContext());
-        KeyManager keyManager = flow.getStates();
+        KeyManager keyManager = KeyManager.get(getBaseContext());
         State state = keyManager.getState(Flow.getKey(getBaseContext()));
         state.setBundle(mainPresenter.toBundle());
         super.onSaveInstanceState(outState);
@@ -226,13 +224,9 @@ public class MainActivity
 
     @Override
     public Object getSystemService(String name) {
-        try {
-            Flow flow = Flow.get(getBaseContext());
-            MainKey mainKey = Flow.getKey(getBaseContext());
-            if(flow.getServices().hasService(mainKey, name)) {
-                return flow.getServices().getService(mainKey, name);
-            }
-        } catch(IllegalStateException e) { // Flow might not exist at this point
+        ServiceProvider serviceProvider = ServiceProvider.get(getBaseContext());
+        if(serviceProvider.hasService(MainKey.KEY, name)) {
+            return serviceProvider.getService(MainKey.KEY, name);
         }
         return super.getSystemService(name);
     }

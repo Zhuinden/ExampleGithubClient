@@ -44,8 +44,6 @@ public class LoginInstrumentedTest {
 
     LoginPresenter loginPresenter;
 
-    Flow flow;
-
     @Before
     public void setup() {
         Espresso.registerIdlingResources(EspressoIdlingResource.getIdlingResource());
@@ -55,8 +53,7 @@ public class LoginInstrumentedTest {
         instrumentation.runOnMainSync(() -> {
             Flow.get(mainActivity.getBaseContext()).setHistory(History.single(LoginKey.create()), Direction.REPLACE);
         });
-        flow = Flow.get(mainActivity.getBaseContext());
-        ServiceProvider serviceProvider = flow.getServices();
+        ServiceProvider serviceProvider = ServiceProvider.get(mainActivity.getBaseContext());
         LoginComponent loginComponent = serviceProvider.getService(LoginKey.create(), DaggerService.TAG);
         loginPresenter = loginComponent.loginPresenter();
     }

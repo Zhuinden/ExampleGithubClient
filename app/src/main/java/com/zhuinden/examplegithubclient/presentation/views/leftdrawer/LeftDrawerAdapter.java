@@ -19,6 +19,7 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 import flowless.Flow;
+import flowless.ServiceProvider;
 
 /**
  * Created by Zhuinden on 2016.12.10..
@@ -56,7 +57,7 @@ public class LeftDrawerAdapter
         @OnClick(R.id.left_drawer_item)
         public void onClickDrawerItem(View view) {
             Object newKey = leftDrawerItem.getKeyCreator().createKey();
-            MainComponent component = Flow.get(context).getServices()
+            MainComponent component = ServiceProvider.get(context)
                     .getService(MainKey.KEY, DaggerService.TAG);
             MainPresenter mainPresenter = component.mainPresenter();
             mainPresenter.goToKey(Flow.get(view), newKey);
