@@ -7,6 +7,7 @@ import com.zhuinden.examplegithubclient.application.BoltsExecutors;
 import com.zhuinden.examplegithubclient.application.injection.KeyScope;
 import com.zhuinden.examplegithubclient.domain.interactor.LoginInteractor;
 import com.zhuinden.examplegithubclient.util.BasePresenter;
+import com.zhuinden.examplegithubclient.util.BundleFactory;
 
 import javax.inject.Inject;
 
@@ -100,7 +101,7 @@ public class LoginPresenter
 
     @Override
     public Bundle toBundle() {
-        Bundle bundle = new Bundle();
+        Bundle bundle = BundleFactory.create();
         bundle.putString("username", username);
         bundle.putString("password", password);
         //bundle.putBoolean("isLoading", isLoading);

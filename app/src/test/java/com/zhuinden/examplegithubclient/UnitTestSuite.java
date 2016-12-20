@@ -10,6 +10,6 @@ import org.junit.runners.Suite;
  */
 
 @RunWith(Suite.class)
-@Suite.SuiteClasses({ExampleUnitTest.class, LoginPresenterTest.class})
+@Suite.SuiteClasses({LoginPresenterTest.class})
 public class UnitTestSuite {
 }

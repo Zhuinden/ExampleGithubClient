@@ -1,7 +1,11 @@
 package com.zhuinden.examplegithubclient.presentation.paths.login;
 
+import android.os.Bundle;
+
 import com.zhuinden.examplegithubclient.application.BoltsExecutors;
 import com.zhuinden.examplegithubclient.domain.interactor.LoginInteractor;
+import com.zhuinden.examplegithubclient.util.BundleFactory;
+import com.zhuinden.examplegithubclient.util.BundleFactoryConfig;
 
 import org.junit.Before;
 import org.junit.Rule;
@@ -38,6 +42,7 @@ public class LoginPresenterTest {
         Executor executor = Runnable::run;
         BoltsExecutors.UI_THREAD = executor;
         BoltsExecutors.BACKGROUND_THREAD = executor;
+        BundleFactoryConfig.setProvider(() -> Mockito.mock(Bundle.class));
     }
 
     @Test
@@ -153,5 +158,40 @@ public class LoginPresenterTest {
         Mockito.verify(viewContract).showLoading();
         Mockito.verify(viewContract, Mockito.atLeastOnce()).hideLoading();
         Mockito.verify(viewContract).handleLoginError();
+    }
+
+    @Test
+    public void toBundle()
+            throws Exception {
+        // given
+        loginPresenter.username = "Hello";
+        loginPresenter.password = "World";
+
+        // when
+        Bundle bundle = loginPresenter.toBundle();
+
+        // then
+        Mockito.verify(bundle).putString("username", "Hello");
+        Mockito.verify(bundle).putString("password", "World");
+        Mockito.verifyNoMoreInteractions(bundle);
+    }
+
+    @Test
+    public void fromBundle()
+            throws Exception {
+        // given
+        loginPresenter.username = "";
+        loginPresenter.password = "";
+
+        Bundle bundle = BundleFactory.create();
+        Mockito.when(bundle.getString("username")).thenReturn("Hello");
+        Mockito.when(bundle.getString("password")).thenReturn("World");
+
+        // when
+        loginPresenter.fromBundle(bundle);
+
+        // then
+        assertThat(loginPresenter.username).isEqualTo("Hello");
+        assertThat(loginPresenter.password).isEqualTo("World");
     }
 }

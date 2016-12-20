@@ -13,6 +13,7 @@ import android.widget.Toast;
 
 import com.zhuinden.examplegithubclient.R;
 import com.zhuinden.examplegithubclient.presentation.paths.repositories.RepositoriesKey;
+import com.zhuinden.examplegithubclient.util.BundleFactory;
 import com.zhuinden.examplegithubclient.util.DaggerService;
 
 import javax.inject.Inject;
@@ -149,7 +150,7 @@ public class LoginView
 
     @Override
     public Bundle toBundle() {
-        Bundle bundle = new Bundle();
+        Bundle bundle = BundleFactory.create();
         bundle.putBundle("PRESENTER_STATE", loginPresenter.toBundle());
         return bundle;
     }

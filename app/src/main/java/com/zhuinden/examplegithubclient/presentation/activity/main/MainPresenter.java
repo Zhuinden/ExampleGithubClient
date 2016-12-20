@@ -9,6 +9,7 @@ import com.zhuinden.examplegithubclient.application.injection.ActivityScope;
 import com.zhuinden.examplegithubclient.presentation.paths.login.LoginKey;
 import com.zhuinden.examplegithubclient.util.AnnotationCache;
 import com.zhuinden.examplegithubclient.util.BasePresenter;
+import com.zhuinden.examplegithubclient.util.BundleFactory;
 import com.zhuinden.examplegithubclient.util.Presenter;
 
 import java.util.Set;
@@ -203,7 +204,7 @@ public class MainPresenter
 
     @Override
     public Bundle toBundle() {
-        Bundle bundle = new Bundle();
+        Bundle bundle = BundleFactory.create();
         bundle.putBoolean("isDrawerOpen", isDrawerOpen);
         bundle.putInt("title", title);
         bundle.putBoolean("toolbarGoPreviousVisible", toolbarGoPreviousVisible);
