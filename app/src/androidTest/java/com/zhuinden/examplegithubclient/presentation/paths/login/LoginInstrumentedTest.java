@@ -2,6 +2,7 @@ package com.zhuinden.examplegithubclient.presentation.paths.login;
 
 import android.app.Instrumentation;
 import android.support.test.InstrumentationRegistry;
+import android.support.test.espresso.Espresso;
 import android.support.test.espresso.action.ViewActions;
 import android.support.test.rule.ActivityTestRule;
 import android.support.test.runner.AndroidJUnit4;
@@ -12,6 +13,7 @@ import com.zhuinden.examplegithubclient.presentation.paths.repositories.Reposito
 import com.zhuinden.examplegithubclient.util.DaggerService;
 import com.zhuinden.examplegithubclient.util.FlowViewAssertions;
 import com.zhuinden.examplegithubclient.util.conditionwatcher.ConditionWatcher;
+import com.zhuinden.examplegithubclient.util.idlingresource.EspressoIdlingResource;
 
 import org.junit.Before;
 import org.junit.Rule;
@@ -46,6 +48,7 @@ public class LoginInstrumentedTest {
 
     @Before
     public void setup() {
+        Espresso.registerIdlingResources(EspressoIdlingResource.getIdlingResource());
         mainActivityActivityTestRule.launchActivity(null);
         Instrumentation instrumentation = InstrumentationRegistry.getInstrumentation();
         MainActivity mainActivity = mainActivityActivityTestRule.getActivity();

@@ -3,12 +3,14 @@ package com.zhuinden.examplegithubclient.presentation.paths.repositories;
 
 import android.app.Instrumentation;
 import android.support.test.InstrumentationRegistry;
+import android.support.test.espresso.Espresso;
 import android.support.test.rule.ActivityTestRule;
 import android.support.test.runner.AndroidJUnit4;
 
 import com.zhuinden.examplegithubclient.presentation.activity.main.MainActivity;
 import com.zhuinden.examplegithubclient.presentation.activity.main.MainPage;
 import com.zhuinden.examplegithubclient.util.FlowViewAssertions;
+import com.zhuinden.examplegithubclient.util.idlingresource.EspressoIdlingResource;
 
 import org.junit.Before;
 import org.junit.Rule;
@@ -36,6 +38,7 @@ public class RepositoriesInstrumentedTest {
 
     @Before
     public void setup() {
+        Espresso.registerIdlingResources(EspressoIdlingResource.getIdlingResource());
         mainPage = new MainPage();
         repositoriesPage = new RepositoriesPage();
         mainActivityActivityTestRule.launchActivity(null);

@@ -3,6 +3,7 @@ package com.zhuinden.examplegithubclient.presentation.activity.main;
 
 import android.content.Context;
 import android.support.test.InstrumentationRegistry;
+import android.support.test.espresso.Espresso;
 import android.support.test.espresso.assertion.ViewAssertions;
 import android.support.test.espresso.matcher.ViewMatchers;
 import android.support.test.rule.ActivityTestRule;
@@ -11,6 +12,7 @@ import android.support.test.runner.AndroidJUnit4;
 import com.zhuinden.examplegithubclient.presentation.paths.login.LoginView;
 import com.zhuinden.examplegithubclient.util.DaggerService;
 import com.zhuinden.examplegithubclient.util.FlowViewAssertions;
+import com.zhuinden.examplegithubclient.util.idlingresource.EspressoIdlingResource;
 
 import org.junit.Before;
 import org.junit.Rule;
@@ -35,8 +37,10 @@ public class MainInstrumentedTest {
 
     @Before
     public void setup() {
+        Espresso.registerIdlingResources(EspressoIdlingResource.getIdlingResource());
         mainPage = new MainPage();
         mainActivityActivityTestRule.launchActivity(null);
+
     }
 
     @Test
