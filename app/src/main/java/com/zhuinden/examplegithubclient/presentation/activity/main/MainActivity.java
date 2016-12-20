@@ -224,9 +224,12 @@ public class MainActivity
 
     @Override
     public Object getSystemService(String name) {
-        ServiceProvider serviceProvider = ServiceProvider.get(getBaseContext());
-        if(serviceProvider.hasService(MainKey.KEY, name)) {
-            return serviceProvider.getService(MainKey.KEY, name);
+        try {
+            ServiceProvider serviceProvider = ServiceProvider.get(getBaseContext());
+            if(serviceProvider.hasService(MainKey.KEY, name)) {
+                return serviceProvider.getService(MainKey.KEY, name);
+            }
+        } catch(IllegalStateException e) { // ServiceProvider and Flow are not initialized before onPostCreate
         }
         return super.getSystemService(name);
     }
