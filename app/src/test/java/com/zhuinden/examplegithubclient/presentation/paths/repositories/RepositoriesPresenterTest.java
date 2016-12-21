@@ -239,6 +239,7 @@ public class RepositoriesPresenterTest {
         // then
         assertThat(repositoriesPresenter.isDownloading).isFalse();
         assertThat(repositoriesPresenter.downloadedAll).isTrue();
+        assertThat(repositoriesPresenter.currentPage).isEqualTo(2);
         assertThat(repositoriesPresenter.repositories).isSameAs(originalRepository);
         Mockito.verify(viewContract).updateRepositories(originalRepository);
     }
