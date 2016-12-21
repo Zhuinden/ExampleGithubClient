@@ -41,4 +41,6 @@ public interface MainComponent {
     LoginInteractor loginInteractor();
 
     void inject(MainActivity mainActivity);
+
+    void inject(MainView mainView);
 }
