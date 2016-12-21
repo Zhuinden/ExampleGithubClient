@@ -13,6 +13,7 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.zhuinden.examplegithubclient.R;
+import com.zhuinden.examplegithubclient.application.injection.config.MainComponentConfig;
 import com.zhuinden.examplegithubclient.presentation.paths.login.LoginKey;
 import com.zhuinden.examplegithubclient.util.AnnotationCache;
 import com.zhuinden.examplegithubclient.util.DaggerService;
@@ -113,7 +114,7 @@ public class MainActivity
         MainKey mainKey = Flow.getKey(getBaseContext());
         MainComponent mainComponent;
         if(!serviceProvider.hasService(mainKey, DaggerService.TAG)) {
-            mainComponent = DaggerMainComponent.create();
+            mainComponent = MainComponentConfig.create();
             serviceProvider.bindService(mainKey, DaggerService.TAG, mainComponent);
         } else {
             mainComponent = DaggerService.getComponent(getBaseContext(), mainKey);

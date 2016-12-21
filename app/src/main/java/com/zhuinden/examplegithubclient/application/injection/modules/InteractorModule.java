@@ -5,18 +5,22 @@ import com.zhuinden.examplegithubclient.domain.interactor.LoginInteractor;
 import com.zhuinden.examplegithubclient.domain.interactor.impl.GetRepositoriesInteractorImpl;
 import com.zhuinden.examplegithubclient.domain.interactor.impl.LoginInteractorImpl;
 
-import dagger.Binds;
 import dagger.Module;
+import dagger.Provides;
 
 /**
  * Created by Owner on 2016.12.10.
  */
 
 @Module
-public abstract class InteractorModule {
-    @Binds
-    abstract GetRepositoriesInteractor getRepositoriesInteractor(GetRepositoriesInteractorImpl getRepositoriesInteractor);
+public class InteractorModule {
+    @Provides
+    GetRepositoriesInteractor getRepositoriesInteractor(GetRepositoriesInteractorImpl getRepositoriesInteractor) {
+        return getRepositoriesInteractor;
+    }
 
-    @Binds
-    abstract LoginInteractor loginInteractor(LoginInteractorImpl loginInteractor);
+    @Provides
+    LoginInteractor loginInteractor(LoginInteractorImpl loginInteractor) {
+        return loginInteractor;
+    }
 }

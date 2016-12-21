@@ -2,10 +2,11 @@ package com.zhuinden.examplegithubclient.presentation.paths.login;
 
 import android.os.Bundle;
 
-import com.zhuinden.examplegithubclient.application.BoltsExecutors;
 import com.zhuinden.examplegithubclient.domain.interactor.LoginInteractor;
+import com.zhuinden.examplegithubclient.util.BoltsConfig;
 import com.zhuinden.examplegithubclient.util.BundleFactory;
 import com.zhuinden.examplegithubclient.util.BundleFactoryConfig;
+import com.zhuinden.examplegithubclient.util.PresenterUtils;
 
 import org.junit.Before;
 import org.junit.Rule;
@@ -14,8 +15,6 @@ import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.junit.MockitoJUnit;
 import org.mockito.junit.MockitoRule;
-
-import java.util.concurrent.Executor;
 
 import bolts.Task;
 
@@ -39,9 +38,7 @@ public class LoginPresenterTest {
     @Before
     public void init() {
         loginPresenter = new LoginPresenter();
-        Executor executor = Runnable::run;
-        BoltsExecutors.UI_THREAD = executor;
-        BoltsExecutors.BACKGROUND_THREAD = executor;
+        BoltsConfig.configureMocks();
         BundleFactoryConfig.setProvider(() -> Mockito.mock(Bundle.class));
     }
 
@@ -108,11 +105,11 @@ public class LoginPresenterTest {
     @Test
     public void loginCallsInteractor()
             throws Exception {
-        loginPresenter.attachView(viewContract);
         // given
         loginPresenter.username = "Hello";
         loginPresenter.password = "World";
         loginPresenter.loginInteractor = loginInteractor;
+        PresenterUtils.setView(loginPresenter, viewContract);
 
         Task<Boolean> task = Mockito.mock(Task.class);
         Mockito.when(loginInteractor.login("Hello", "World")).thenReturn(task);
@@ -127,11 +124,11 @@ public class LoginPresenterTest {
     @Test
     public void loginSuccess()
             throws Exception {
-        loginPresenter.attachView(viewContract);
         // given
         loginPresenter.username = "Hello";
         loginPresenter.password = "World";
         loginPresenter.loginInteractor = (username, password) -> Task.call(() -> true);
+        PresenterUtils.setView(loginPresenter, viewContract);
 
         // when
         loginPresenter.login();
@@ -145,18 +142,18 @@ public class LoginPresenterTest {
     @Test
     public void loginFailure()
             throws Exception {
-        loginPresenter.attachView(viewContract);
         // given
         loginPresenter.username = "Hello";
         loginPresenter.password = "World";
         loginPresenter.loginInteractor = (username, password) -> Task.call(() -> false);
+        PresenterUtils.setView(loginPresenter, viewContract);
 
         // when
         loginPresenter.login();
 
         // then
         Mockito.verify(viewContract).showLoading();
-        Mockito.verify(viewContract, Mockito.atLeastOnce()).hideLoading();
+        Mockito.verify(viewContract).hideLoading();
         Mockito.verify(viewContract).handleLoginError();
     }
 

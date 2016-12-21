@@ -1,5 +1,6 @@
 package com.zhuinden.examplegithubclient.presentation.paths.repositories;
 
+import com.zhuinden.examplegithubclient.application.BoltsExecutors;
 import com.zhuinden.examplegithubclient.application.injection.KeyScope;
 import com.zhuinden.examplegithubclient.domain.data.response.repositories.Repository;
 import com.zhuinden.examplegithubclient.domain.interactor.GetRepositoriesInteractor;
@@ -10,8 +11,6 @@ import java.util.List;
 
 import javax.inject.Inject;
 
-import bolts.Task;
-
 /**
  * Created by Zhuinden on 2016.12.18..
  */
@@ -19,6 +18,8 @@ import bolts.Task;
 @KeyScope(RepositoriesKey.class)
 public class RepositoriesPresenter
         extends BasePresenter<RepositoriesPresenter.ViewContract> {
+    static final String REPO_NAME = "square";
+
     @Inject
     GetRepositoriesInteractor getRepositoriesInteractor;
 
@@ -35,10 +36,10 @@ public class RepositoriesPresenter
         void openRepository(String url);
     }
 
-    private int currentPage = 1;
+    int currentPage = 1;
 
-    private boolean isDownloading;
-    private boolean downloadedAll;
+    boolean isDownloading;
+    boolean downloadedAll;
 
     public boolean didDownloadAll() {
         return downloadedAll;
@@ -47,7 +48,7 @@ public class RepositoriesPresenter
     private void downloadPage() {
         if(!downloadedAll) {
             isDownloading = true;
-            getRepositoriesInteractor.getRepositories("square", currentPage).continueWith(task -> {
+            getRepositoriesInteractor.getRepositories(REPO_NAME, currentPage).continueWith(task -> {
                 isDownloading = false;
                 List<Repository> repositories = task.getResult();
                 if(this.repositories == null) { // should be in data layer
@@ -62,7 +63,7 @@ public class RepositoriesPresenter
                 }
                 updateRepositoriesInView(); // TODO: can View be null here?
                 return null;
-            }, Task.UI_THREAD_EXECUTOR);
+            }, BoltsExecutors.UI_THREAD);
         }
     }
 

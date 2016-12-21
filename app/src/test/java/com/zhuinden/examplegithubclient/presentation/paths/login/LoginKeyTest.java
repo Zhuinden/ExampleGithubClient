@@ -63,7 +63,6 @@ public class LoginKeyTest {
                 LoginKey.class.getAnnotation(ToolbarButtonVisibility.class))).isEqualTo(false);
     }
 
-
     @Test
     public void create()
             throws Exception {
