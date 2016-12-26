@@ -19,6 +19,7 @@ public abstract class BasePresenter<V extends Presenter.ViewContract>
     @Override
     public final void attachView(V view) {
         this.view = view;
+        onAttach();
         initializeView(view);
     }
 
@@ -26,6 +27,13 @@ public abstract class BasePresenter<V extends Presenter.ViewContract>
 
     @Override
     public final void detachView() {
+        onDetach();
         this.view = null;
+    }
+
+    protected void onAttach() {
+    }
+
+    protected void onDetach() {
     }
 }

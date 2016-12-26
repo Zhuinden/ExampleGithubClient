@@ -1,6 +1,8 @@
 package com.zhuinden.examplegithubclient.domain.interactor.impl;
 
+import com.zhuinden.examplegithubclient.application.BoltsExecutors;
 import com.zhuinden.examplegithubclient.application.injection.ActivityScope;
+import com.zhuinden.examplegithubclient.data.model.RepositoryDataSource;
 import com.zhuinden.examplegithubclient.domain.data.response.repositories.Repository;
 import com.zhuinden.examplegithubclient.domain.interactor.GetRepositoriesInteractor;
 import com.zhuinden.examplegithubclient.domain.service.GithubService;
@@ -17,15 +19,24 @@ import bolts.Task;
 @ActivityScope
 public class GetRepositoriesInteractorImpl
         implements GetRepositoriesInteractor {
-    private GithubService githubService;
+    @Inject
+    GithubService githubService;
 
     @Inject
-    public GetRepositoriesInteractorImpl(GithubService githubService) {
-        this.githubService = githubService;
+    RepositoryDataSource repositoryDataSource;
+
+    @Inject
+    public GetRepositoriesInteractorImpl() {
     }
 
     @Override
     public Task<List<Repository>> getRepositories(final String user, int page) {
-        return githubService.getRepositories(user, page);
+        return githubService.getRepositories(user, page).continueWith(task -> {
+            if(task.isFaulted()) {
+                throw task.getError();
+            }
+            repositoryDataSource.addRepositories(task.getResult());
+            return task.getResult();
+        }, BoltsExecutors.UI_THREAD);
     }
 }

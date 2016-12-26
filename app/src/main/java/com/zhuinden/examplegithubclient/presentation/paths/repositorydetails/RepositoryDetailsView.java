@@ -8,19 +8,15 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.zhuinden.examplegithubclient.R;
+import com.zhuinden.examplegithubclient.data.model.RepositoryDataSource;
 import com.zhuinden.examplegithubclient.domain.data.response.repositories.Repository;
-import com.zhuinden.examplegithubclient.presentation.paths.repositories.RepositoriesComponent;
-import com.zhuinden.examplegithubclient.presentation.paths.repositories.RepositoriesPresenter;
 import com.zhuinden.examplegithubclient.util.DaggerService;
-
-import java.util.List;
 
 import javax.inject.Inject;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import flowless.Flow;
-import flowless.ServiceProvider;
 import flowless.preset.FlowLifecycles;
 
 /**
@@ -54,26 +50,17 @@ public class RepositoryDetailsView
     @Inject
     RepositoryDetailsPresenter repositoryDetailsPresenter;
 
+    @Inject
+    RepositoryDataSource repositoryDataSource;
+
     Repository selectedRepository;
 
     public void init() {
         if(!isInEditMode()) {
             RepositoryDetailsComponent repositoryDetailsComponent = DaggerService.getComponent(getContext());
             repositoryDetailsComponent.inject(this);
-
-            ServiceProvider serviceProvider = ServiceProvider.get(this);
             RepositoryDetailsKey repositoryDetailsKey = Flow.getKey(this);
-            RepositoriesComponent repositoriesComponent = DaggerService.getComponent(getContext(), repositoryDetailsKey.parent());
-            RepositoriesPresenter repositoriesPresenter = repositoriesComponent.repositoriesPresenter();
-            List<Repository> repositories = repositoriesPresenter.getRepositories();
-            if(repositories != null) {
-                for(Repository repository : repositories) {
-                    if(repository.getUrl().equals(repositoryDetailsKey.url())) {
-                        selectedRepository = repository;
-                        break;
-                    }
-                }
-            }
+            selectedRepository = repositoryDataSource.findByUrl(repositoryDetailsKey.url());
         }
     }
 

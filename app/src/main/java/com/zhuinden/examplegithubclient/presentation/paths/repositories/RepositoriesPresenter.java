@@ -2,6 +2,7 @@ package com.zhuinden.examplegithubclient.presentation.paths.repositories;
 
 import com.zhuinden.examplegithubclient.application.BoltsExecutors;
 import com.zhuinden.examplegithubclient.application.injection.KeyScope;
+import com.zhuinden.examplegithubclient.data.model.RepositoryDataSource;
 import com.zhuinden.examplegithubclient.domain.data.response.repositories.Repository;
 import com.zhuinden.examplegithubclient.domain.interactor.GetRepositoriesInteractor;
 import com.zhuinden.examplegithubclient.util.BasePresenter;
@@ -24,10 +25,29 @@ public class RepositoriesPresenter
     GetRepositoriesInteractor getRepositoriesInteractor;
 
     @Inject
+    RepositoryDataSource repositoryDataSource;
+
+    @Inject
     public RepositoriesPresenter() {
     }
 
     List<Repository> repositories;
+
+    RepositoryDataSource.Unbinder unbinder;
+
+    @Override
+    protected void onAttach() {
+        unbinder = repositoryDataSource.registerChangeListener( //
+                newRepositories -> {
+                    RepositoriesPresenter.this.repositories = newRepositories;
+                    updateRepositoriesInView();
+                });
+    }
+
+    @Override
+    protected void onDetach() {
+        unbinder.unbind();
+    }
 
     public interface ViewContract
             extends Presenter.ViewContract {
@@ -51,17 +71,11 @@ public class RepositoriesPresenter
             getRepositoriesInteractor.getRepositories(REPO_NAME, currentPage).continueWith(task -> {
                 isDownloading = false;
                 List<Repository> repositories = task.getResult();
-                if(this.repositories == null) { // should be in data layer
-                    this.repositories = repositories;
-                } else {
-                    this.repositories.addAll(repositories);
-                }
                 if(repositories.size() <= 0) {
                     downloadedAll = true;
                 } else {
                     currentPage++;
                 }
-                updateRepositoriesInView(); // TODO: can View be null here?
                 return null;
             }, BoltsExecutors.UI_THREAD);
         }
@@ -69,7 +83,7 @@ public class RepositoriesPresenter
 
     @Override
     protected void initializeView(ViewContract view) {
-        if(repositories == null) {
+        if(repositories.isEmpty()) {
             downloadPage();
         } else {
             updateRepositoriesInView();
@@ -77,7 +91,9 @@ public class RepositoriesPresenter
     }
 
     private void updateRepositoriesInView() {
-        view.updateRepositories(repositories);
+        if(hasView()) {
+            view.updateRepositories(repositories);
+        }
     }
 
     public List<Repository> getRepositories() {
