@@ -3,7 +3,6 @@ package com.zhuinden.examplegithubclient.presentation.paths.repositorydetails;
 import android.content.Context;
 
 import com.zhuinden.examplegithubclient.presentation.activity.main.MainComponent;
-import com.zhuinden.examplegithubclient.presentation.activity.main.MainKey;
 import com.zhuinden.examplegithubclient.util.ComponentFactory;
 import com.zhuinden.examplegithubclient.util.DaggerService;
 
@@ -15,7 +14,7 @@ public class RepositoryDetailsComponentFactory
         implements ComponentFactory.FactoryMethod<RepositoryDetailsComponent> {
     @Override
     public RepositoryDetailsComponent createComponent(Context context) {
-        MainComponent mainComponent = DaggerService.getComponent(context, MainKey.KEY);
+        MainComponent mainComponent = DaggerService.getGlobalComponent(context);
         return DaggerRepositoryDetailsComponent.builder().mainComponent(mainComponent).build();
     }
 }

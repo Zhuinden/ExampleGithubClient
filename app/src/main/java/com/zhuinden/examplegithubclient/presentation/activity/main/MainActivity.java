@@ -53,7 +53,7 @@ public class MainActivity
             mainComponent = MainComponentConfig.create();
             serviceProvider.bindService(mainKey, DaggerService.TAG, mainComponent);
         } else {
-            mainComponent = DaggerService.getComponent(getBaseContext(), mainKey);
+            mainComponent = DaggerService.getGlobalComponent(getBaseContext());
         }
         mainComponent.inject(this);
         KeyManager keyManager = KeyManager.get(getBaseContext());

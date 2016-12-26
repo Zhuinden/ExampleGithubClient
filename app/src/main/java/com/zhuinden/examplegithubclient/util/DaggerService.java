@@ -2,6 +2,8 @@ package com.zhuinden.examplegithubclient.util;
 
 import android.content.Context;
 
+import com.zhuinden.examplegithubclient.presentation.activity.main.MainKey;
+
 import flowless.ServiceProvider;
 
 /**
@@ -18,8 +20,8 @@ public class DaggerService {
     }
 
     @SuppressWarnings("unchecked")
-    public static <T> T getComponent(Context context, Object key) {
+    public static <T> T getGlobalComponent(Context context) {
         //noinspection ResourceType
-        return (T) ServiceProvider.get(context).getService(key, TAG);
+        return (T) ServiceProvider.get(context).getService(MainKey.KEY, TAG);
     }
 }

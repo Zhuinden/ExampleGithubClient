@@ -4,7 +4,6 @@ import android.content.Context;
 
 import com.zhuinden.examplegithubclient.application.injection.ActivityScope;
 import com.zhuinden.examplegithubclient.presentation.activity.main.MainComponent;
-import com.zhuinden.examplegithubclient.presentation.activity.main.MainKey;
 
 import java.lang.reflect.InvocationTargetException;
 import java.util.Arrays;
@@ -25,7 +24,7 @@ public class AnnotationCache {
     public static final String TAG = "AnnotationCache";
 
     public static AnnotationCache getCache(Context context) {
-        MainComponent mainComponent = DaggerService.getComponent(context, MainKey.KEY);
+        MainComponent mainComponent = DaggerService.getGlobalComponent(context);
         return mainComponent.annotationCache();
     }
 
