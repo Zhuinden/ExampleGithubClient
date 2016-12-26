@@ -6,10 +6,11 @@ import com.zhuinden.examplegithubclient.domain.data.response.repositories.Reposi
 import com.zhuinden.examplegithubclient.domain.service.GithubService;
 import com.zhuinden.examplegithubclient.domain.service.retrofit.RetrofitGithubService;
 
-import java.io.IOException;
 import java.util.List;
 
 import javax.inject.Inject;
+
+import bolts.Task;
 
 /**
  * Created by Owner on 2016.12.10.
@@ -25,14 +26,12 @@ public class GithubServiceImpl
     }
 
     @Override
-    public List<Organization> getOrganizations(String user)
-            throws IOException {
-        return retrofitGithubService.getOrganizations(user).execute().body();
+    public Task<List<Organization>> getOrganizations(String user) {
+        return retrofitGithubService.getOrganizations(user);
     }
 
     @Override
-    public List<Repository> getRepositories(String user, int page)
-            throws IOException {
-        return retrofitGithubService.getRepositories(user, page).execute().body();
+    public Task<List<Repository>> getRepositories(String user, int page) {
+        return retrofitGithubService.getRepositories(user, page);
     }
 }
