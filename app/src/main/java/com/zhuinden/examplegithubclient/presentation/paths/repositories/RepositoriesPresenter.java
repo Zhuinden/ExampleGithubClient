@@ -83,7 +83,7 @@ public class RepositoriesPresenter
 
     @Override
     protected void initializeView(ViewContract view) {
-        if(repositories.isEmpty()) {
+        if(repositories == null || repositories.isEmpty()) {
             downloadPage();
         } else {
             updateRepositoriesInView();
