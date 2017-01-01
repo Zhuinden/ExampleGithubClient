@@ -20,7 +20,7 @@ public abstract class FlowlessActivity
 
     @Override
     protected void attachBaseContext(Context newBase) {
-        transitionDispatcher = new TransitionDispatcher(this);
+        transitionDispatcher = new TransitionDispatcher();
         newBase = Flow.configure(newBase, this) //
                 .defaultKey(getDefaultKey()) //
                 .globalKey(getGlobalKey()) //

@@ -80,7 +80,7 @@ dependencies {
     apt 'frankiesardo:auto-parcel:1.0.3'
 
     // sane backstack management
-    compile 'com.github.Zhuinden:flowless:1.0-alpha1.24'
+    compile 'com.github.Zhuinden:flowless:1.0-alpha1.25'
 
     // networking
     compile 'com.squareup.retrofit2:retrofit:2.1.0'

@@ -1,6 +1,5 @@
 package com.zhuinden.examplegithubclient.util;
 
-import android.app.Activity;
 import android.content.Context;
 import android.support.annotation.NonNull;
 import android.view.LayoutInflater;
@@ -20,10 +19,6 @@ import flowless.preset.SingleRootDispatcher;
  */
 
 public class TransitionDispatcher extends SingleRootDispatcher {
-    public TransitionDispatcher(Activity activity) {
-        super(activity);
-    }
-
     @Override
     public void dispatch(@NonNull Traversal traversal, @NonNull TraversalCallback callback) {
         if(DispatcherUtils.isPreviousKeySameAsNewKey(traversal.origin, traversal.destination)) { //short circuit on same key
@@ -31,7 +26,7 @@ public class TransitionDispatcher extends SingleRootDispatcher {
             return;
         }
         final Object newKey = DispatcherUtils.getNewKey(traversal);
-        AnnotationCache annotationCache = AnnotationCache.getCache(activity.getBaseContext());
+        AnnotationCache annotationCache = AnnotationCache.getCache(baseContext);
         int newKeyLayout = annotationCache.getLayout(newKey);
 
         final ViewGroup root = rootHolder.getRoot();
