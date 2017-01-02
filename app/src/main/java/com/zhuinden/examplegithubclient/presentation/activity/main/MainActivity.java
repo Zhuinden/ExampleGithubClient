@@ -29,7 +29,7 @@ import flowless.preset.FlowLifecycleProvider;
 public class MainActivity
         extends FlowlessActivity {
     @BindView(R.id.drawer_layout)
-    MainView drawerLayout;
+    MainView mainView;
 
     @BindView(R.id.hidden_toolbar)
     Toolbar hiddenToolbar;
@@ -61,7 +61,7 @@ public class MainActivity
         mainPresenter.fromBundle(state.getBundle());
 
         //
-        mainComponent.inject(drawerLayout);
+        mainComponent.inject(mainView);
     }
 
     @Override
@@ -82,7 +82,7 @@ public class MainActivity
         ButterKnife.bind(this);
         setSupportActionBar(hiddenToolbar);
 
-        actionBarDrawerToggle = new ActionBarDrawerToggle(this, drawerLayout, hiddenToolbar, R.string.open, R.string.close) {
+        actionBarDrawerToggle = new ActionBarDrawerToggle(this, mainView, hiddenToolbar, R.string.open, R.string.close) {
             @Override
             public void onDrawerOpened(View drawerView) {
                 super.onDrawerOpened(drawerView);
@@ -97,10 +97,10 @@ public class MainActivity
                 supportInvalidateOptionsMenu();
             }
         };
-        drawerLayout.setDrawerListener(actionBarDrawerToggle);
+        mainView.setDrawerListener(actionBarDrawerToggle);
         actionBarDrawerToggle.setDrawerIndicatorEnabled(false);
 
-        transitionDispatcher.getRootHolder().setRoot(drawerLayout.getRoot());
+        transitionDispatcher.getRootHolder().setRoot(mainView.getRoot());
 
         actionBarDrawerToggle.syncState();
     }
@@ -109,12 +109,12 @@ public class MainActivity
     protected void onPostCreate(@Nullable Bundle savedInstanceState) {
         super.onPostCreate(savedInstanceState);
         injectServices();
-        FlowLifecycleProvider.onViewRestored(drawerLayout);
+        FlowLifecycleProvider.onViewRestored(mainView);
     }
 
     @Override
     protected void onDestroy() {
-        FlowLifecycleProvider.onViewDestroyed(drawerLayout, false);
+        FlowLifecycleProvider.onViewDestroyed(mainView, false);
         super.onDestroy();
     }
 
