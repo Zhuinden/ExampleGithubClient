@@ -1,6 +1,6 @@
 package com.zhuinden.examplegithubclient.presentation.paths.repositories;
 
-import com.zhuinden.examplegithubclient.data.model.RepositoryDataSource;
+import com.zhuinden.examplegithubclient.data.repository.RepositoryRepository;
 import com.zhuinden.examplegithubclient.domain.data.response.repositories.Repository;
 import com.zhuinden.examplegithubclient.domain.interactor.GetRepositoriesInteractor;
 import com.zhuinden.examplegithubclient.util.BoltsConfig;
@@ -37,7 +37,7 @@ public class RepositoriesPresenterTest {
     GetRepositoriesInteractor getRepositoriesInteractor;
 
     @Mock
-    RepositoryDataSource repositoryDataSource;
+    RepositoryRepository repositoryRepository;
 
     @Before
     public void init() {
@@ -70,7 +70,7 @@ public class RepositoriesPresenterTest {
         repositoriesPresenter.downloadedAll = false;
         repositoriesPresenter.currentPage = 1;
         repositoriesPresenter.getRepositoriesInteractor = getRepositoriesInteractor;
-        repositoriesPresenter.repositoryDataSource = repositoryDataSource;
+        repositoriesPresenter.repositoryRepository = repositoryRepository;
         Task<List<Repository>> task = Mockito.mock(Task.class);
         Mockito.when(getRepositoriesInteractor.getRepositories(RepositoriesPresenter.REPO_NAME, 1)).thenReturn(task);
 
@@ -95,7 +95,7 @@ public class RepositoriesPresenterTest {
         repositoriesPresenter.isDownloading = false;
         repositoriesPresenter.currentPage = 2;
         repositoriesPresenter.getRepositoriesInteractor = getRepositoriesInteractor;
-        repositoriesPresenter.repositoryDataSource = repositoryDataSource;
+        repositoriesPresenter.repositoryRepository = repositoryRepository;
 
         // when
         repositoriesPresenter.attachView(viewContract);
