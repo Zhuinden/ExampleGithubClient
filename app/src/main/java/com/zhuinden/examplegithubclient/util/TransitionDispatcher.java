@@ -8,6 +8,8 @@ import android.view.ViewGroup;
 
 import com.transitionseverywhere.TransitionManager;
 
+import java.util.Set;
+
 import flowless.ServiceProvider;
 import flowless.Traversal;
 import flowless.TraversalCallback;
@@ -33,17 +35,20 @@ public class TransitionDispatcher extends SingleRootDispatcher {
         final View previousView = root.getChildAt(0);
         DispatcherUtils.persistViewToStateAndNotifyRemoval(traversal, previousView);
 
+        Set<Class<?>> parentClasses = annotationCache.getChildOf(newKey);
         ServiceProvider serviceProvider = ServiceProvider.get(baseContext);
         if(traversal.origin != null) {
-            for(Object key : traversal.origin) { // retain only current key's services
-                if(!newKey.equals(key)) {
+            for(Object key : traversal.origin) { // retain only current key's and parents' services
+                boolean hasParent = evaluateIfHasParent(parentClasses, key);
+                if(!newKey.equals(key) && !hasParent) {
                     serviceProvider.unbindServices(key);
                 }
             }
         }
 
-        for(Object key : traversal.destination) { // retain only current key's services
-            if(!newKey.equals(key)) {
+        for(Object key : traversal.destination) { // retain only current key's and parents' services
+            boolean hasParent = evaluateIfHasParent(parentClasses, key);
+            if(!newKey.equals(key) && !hasParent) {
                 serviceProvider.unbindServices(key);
             } else {
                 if(!serviceProvider.hasService(key, DaggerService.TAG)) {
@@ -67,5 +72,16 @@ public class TransitionDispatcher extends SingleRootDispatcher {
         }
         root.addView(newView);
         callback.onTraversalCompleted();
+    }
+
+    private boolean evaluateIfHasParent(Set<Class<?>> parentClasses, Object key) {
+        boolean hasParent = false;
+        for(Class<?> parentClass : parentClasses) {
+            if(parentClass.isAssignableFrom(key.getClass())) {
+                hasParent = true;
+                break;
+            }
+        }
+        return hasParent;
     }
 }
