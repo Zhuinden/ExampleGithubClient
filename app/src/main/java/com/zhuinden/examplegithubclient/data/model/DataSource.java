@@ -18,4 +18,8 @@ public interface DataSource<M> {
     public interface Modify<R, M> {
         R modify(List<M> mutableRepositories);
     }
+
+    public interface Search<R, M> {
+        R search(List<M> immutableRepositories);
+    }
 }

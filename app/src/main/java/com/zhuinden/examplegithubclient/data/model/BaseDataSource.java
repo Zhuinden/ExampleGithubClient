@@ -36,10 +36,6 @@ public abstract class BaseDataSource<M>
         return m;
     }
 
-    public interface Search<R, M> {
-        R search(List<M> immutableRepositories);
-    }
-
     public <R> R search(Search<R, M> search) {
         return search.search(Collections.unmodifiableList(getData()));
     }
