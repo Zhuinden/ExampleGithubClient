@@ -1,3 +1,5 @@
+(also exported to [Flowless/flowless-mvp-example](https://github.com/Zhuinden/flowless/tree/master/flowless-mvp-example))
+
 # Flowless MVP Example: "Example Github Client"
 
 In reality, login just waits 3 seconds, and the only repository you download is "square" repository.
