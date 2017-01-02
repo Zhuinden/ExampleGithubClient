@@ -3,6 +3,7 @@ package com.zhuinden.examplegithubclient.presentation.paths.repositories;
 import com.zhuinden.examplegithubclient.application.BoltsExecutors;
 import com.zhuinden.examplegithubclient.application.injection.KeyScope;
 import com.zhuinden.examplegithubclient.data.model.RepositoryDataSource;
+import com.zhuinden.examplegithubclient.data.repository.RepositoryRepository;
 import com.zhuinden.examplegithubclient.domain.data.response.repositories.Repository;
 import com.zhuinden.examplegithubclient.domain.interactor.GetRepositoriesInteractor;
 import com.zhuinden.examplegithubclient.util.BasePresenter;
@@ -25,7 +26,7 @@ public class RepositoriesPresenter
     GetRepositoriesInteractor getRepositoriesInteractor;
 
     @Inject
-    RepositoryDataSource repositoryDataSource;
+    RepositoryRepository repositoryRepository;
 
     @Inject
     public RepositoriesPresenter() {
@@ -37,7 +38,7 @@ public class RepositoriesPresenter
 
     @Override
     protected void onAttach() {
-        unbinder = repositoryDataSource.registerChangeListener( //
+        unbinder = repositoryRepository.subscribe( //
                 newRepositories -> {
                     RepositoriesPresenter.this.repositories = newRepositories;
                     updateRepositoriesInView();

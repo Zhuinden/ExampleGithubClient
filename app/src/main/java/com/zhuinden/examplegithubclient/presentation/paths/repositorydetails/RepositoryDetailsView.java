@@ -8,7 +8,7 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.zhuinden.examplegithubclient.R;
-import com.zhuinden.examplegithubclient.data.model.RepositoryDataSource;
+import com.zhuinden.examplegithubclient.data.repository.RepositoryRepository;
 import com.zhuinden.examplegithubclient.domain.data.response.repositories.Repository;
 import com.zhuinden.examplegithubclient.util.DaggerService;
 
@@ -51,7 +51,7 @@ public class RepositoryDetailsView
     RepositoryDetailsPresenter repositoryDetailsPresenter;
 
     @Inject
-    RepositoryDataSource repositoryDataSource;
+    RepositoryRepository repositoryRepository;
 
     Repository selectedRepository;
 
@@ -60,7 +60,7 @@ public class RepositoryDetailsView
             RepositoryDetailsComponent repositoryDetailsComponent = DaggerService.getComponent(getContext());
             repositoryDetailsComponent.inject(this);
             RepositoryDetailsKey repositoryDetailsKey = Flow.getKey(this);
-            selectedRepository = repositoryDataSource.findByUrl(repositoryDetailsKey.url());
+            selectedRepository = repositoryRepository.findByUrl(repositoryDetailsKey.url());
         }
     }
 
