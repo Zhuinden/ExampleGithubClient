@@ -66,61 +66,61 @@ public abstract class LoginKey
 The dispatcher creates the view and the scoped component, the view injects itself, and attaches itself to the presenter.
 
 ``` java
-    public class RepositoriesView
+public class RepositoriesView
         extends RelativeLayout
         implements FlowLifecycles.ViewLifecycleListener, RepositoriesPresenter.ViewContract {
 
-        // constructors
+    // constructors
         
-        public void init() {
-            if(!isInEditMode()) {
-                RepositoriesComponent repositoriesComponent = DaggerService.getComponent(getContext());
-                repositoriesComponent.inject(this);
-            }
-        }
-
-        @Inject
-        RepositoriesPresenter repositoriesPresenter;
-        
-        @Override
-        public void onViewRestored() {
-            repositoriesPresenter.attachView(this);
-        }
-
-        @Override
-        public void onViewDestroyed(boolean removedByFlow) {
-            repositoriesPresenter.detachView();
+    public void init() {
+        if(!isInEditMode()) {
+            RepositoriesComponent repositoriesComponent = DaggerService.getComponent(getContext());
+            repositoriesComponent.inject(this);
         }
     }
+
+    @Inject
+    RepositoriesPresenter repositoriesPresenter;
+        
+    @Override
+    public void onViewRestored() {
+        repositoriesPresenter.attachView(this);
+    }
+
+    @Override
+    public void onViewDestroyed(boolean removedByFlow) {
+        repositoriesPresenter.detachView();
+    }
+}
 ```
 
 The presenter provides a view contract based on which it can call the callbacks inside the view, to bring it "up-to-date" or to navigate.
 
 ``` java
-    @KeyScope(RepositoriesKey.class)
-    public class RepositoriesPresenter
+@KeyScope(RepositoriesKey.class)
+public class RepositoriesPresenter
         extends BasePresenter<RepositoriesPresenter.ViewContract> {
         
-        @Inject
-        public RepositoriesPresenter() {
-        }
+    @Inject
+    public RepositoriesPresenter() {
+    }
         
-        public interface ViewContract
-                extends Presenter.ViewContract {
-            void updateRepositories(List<Repository> repositories);
+    public interface ViewContract
+            extends Presenter.ViewContract {
+        void updateRepositories(List<Repository> repositories);
 
-            void openRepository(String url);
-        }
+        void openRepository(String url);
+    }
 
-        @Override
-        protected void initializeView(ViewContract view) {
-            if(repositories == null || repositories.isEmpty()) {
-                downloadPage();
-            } else {
-                updateRepositoriesInView();
-            }
+    @Override
+    protected void initializeView(ViewContract view) {
+        if(repositories == null || repositories.isEmpty()) {
+            downloadPage();
+        } else {
+            updateRepositoriesInView();
         }
     }
+}
 ```
 
 The interactors download the data via the service, and save it to the model. The presenters are subscribed to changes inside the model.
