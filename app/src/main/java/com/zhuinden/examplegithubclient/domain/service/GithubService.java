@@ -1,7 +1,7 @@
 package com.zhuinden.examplegithubclient.domain.service;
 
 import com.zhuinden.examplegithubclient.domain.data.response.organization.Organization;
-import com.zhuinden.examplegithubclient.domain.data.response.repositories.Repository;
+import com.zhuinden.examplegithubclient.domain.data.response.repositories.GithubRepo;
 
 import java.util.List;
 
@@ -15,5 +15,5 @@ import io.reactivex.Single;
 public interface GithubService {
     Single<List<Organization>> getOrganizations(String user);
 
-    Single<List<Repository>> getRepositories(String user, int page);
+    Single<List<GithubRepo>> getRepositories(String user, int page);
 }
