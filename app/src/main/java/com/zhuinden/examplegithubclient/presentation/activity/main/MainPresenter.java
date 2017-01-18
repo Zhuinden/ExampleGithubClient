@@ -44,6 +44,9 @@ public class MainPresenter
     AnnotationCache annotationCache;
 
     @Inject
+    Flow flow;
+
+    @Inject
     public MainPresenter() {
     }
 
@@ -57,7 +60,7 @@ public class MainPresenter
         state.accept(state.getValue().toBuilder().setTitle(title).build());
     }
 
-    public void goToKey(Flow flow, Object newKey) {
+    public void goToKey(Object newKey) {
         closeDrawer();
         if(newKey instanceof LoginKey) {
             flow.setHistory(History.single(newKey), Direction.FORWARD);

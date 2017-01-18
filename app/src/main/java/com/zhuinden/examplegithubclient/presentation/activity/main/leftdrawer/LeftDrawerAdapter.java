@@ -17,7 +17,6 @@ import com.zhuinden.examplegithubclient.util.DaggerService;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
-import flowless.Flow;
 
 /**
  * Created by Zhuinden on 2016.12.10..
@@ -57,7 +56,7 @@ public class LeftDrawerAdapter
             Object newKey = leftDrawerItem.getKeyCreator().createKey();
             MainComponent component = DaggerService.getGlobalComponent(context);
             MainPresenter mainPresenter = component.mainPresenter();
-            mainPresenter.goToKey(Flow.get(view), newKey);
+            mainPresenter.goToKey(newKey);
         }
 
         public LeftDrawerViewHolder(View itemView) {

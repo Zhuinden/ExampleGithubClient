@@ -11,6 +11,7 @@ import com.zhuinden.examplegithubclient.util.BundleFactory;
 import javax.inject.Inject;
 
 import flowless.Bundleable;
+import flowless.Flow;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 
 /**
@@ -24,6 +25,9 @@ public class LoginPresenter
 
     @Inject
     LoginInteractor loginInteractor;
+
+    @Inject
+    Flow flow;
 
     @Inject
     public LoginPresenter() {
