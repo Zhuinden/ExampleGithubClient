@@ -3,14 +3,12 @@ package com.zhuinden.examplegithubclient.presentation.activity.main;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-import android.support.annotation.StringRes;
 
+import com.jakewharton.rxrelay2.BehaviorRelay;
 import com.zhuinden.examplegithubclient.application.injection.ActivityScope;
 import com.zhuinden.examplegithubclient.presentation.paths.login.LoginKey;
 import com.zhuinden.examplegithubclient.util.AnnotationCache;
-import com.zhuinden.examplegithubclient.util.BasePresenter;
 import com.zhuinden.examplegithubclient.util.BundleFactory;
-import com.zhuinden.examplegithubclient.util.Presenter;
 
 import java.util.Set;
 
@@ -24,75 +22,39 @@ import flowless.History;
 import flowless.Traversal;
 import flowless.TraversalCallback;
 import flowless.preset.DispatcherUtils;
+import io.reactivex.Observable;
 
 /**
  * Created by Owner on 2016.12.10.
  */
 @ActivityScope
 public class MainPresenter
-        extends BasePresenter<MainPresenter.ViewContract>
+        //extends BasePresenter<MainPresenter.ViewContract>
         implements Bundleable, Dispatcher {
+    //public interface ViewContract
+    //        extends Presenter.ViewContract {
+    //}
+
+    //@Override
+    //protected void initializeView(ViewContract view) {
+    //    // doesn't need to do a thing
+    //}
+
     @Inject
     AnnotationCache annotationCache;
-
 
     @Inject
     public MainPresenter() {
     }
 
-    @StringRes
-    int title;
-    boolean isDrawerOpen;
-    boolean toolbarGoPreviousVisible;
-    boolean drawerToggleVisible;
-    boolean leftDrawerEnabled;
+    private BehaviorRelay<MainState> state = BehaviorRelay.createDefault(MainState.create());
 
-    public interface ViewContract
-            extends Presenter.ViewContract {
-        void openDrawer();
-
-        void closeDrawer();
-
-        void setTitle(@StringRes int resourceId);
-
-        void enableLeftDrawer();
-
-        void disableLeftDrawer();
-
-        void hideDrawerToggle();
-
-        void showDrawerToggle();
-
-        void hideToolbarGoPrevious();
-
-        void showToolbarGoPrevious();
-    }
-
-    @Override
-    protected void initializeView(ViewContract view) {
-        view.setTitle(title);
-        if(isDrawerOpen) {
-            openDrawer();
-        } else {
-            closeDrawer();
-        }
-        if(toolbarGoPreviousVisible) {
-            showToolbarGoPrevious();
-        } else {
-            hideToolbarGoPrevious();
-        }
-        if(drawerToggleVisible) {
-            showDrawerToggle();
-        } else {
-            hideDrawerToggle();
-        }
+    public Observable<MainState> state() {
+        return state.distinctUntilChanged();
     }
 
     public void setTitle(int title) {
-        this.title = title;
-        if(hasView()) {
-            getView().setTitle(title);
-        }
+        state.accept(state.getValue().toBuilder().setTitle(title).build());
     }
 
     public void goToKey(Flow flow, Object newKey) {
@@ -105,7 +67,7 @@ public class MainPresenter
     }
 
     public boolean onBackPressed() {
-        if(isDrawerOpen) {
+        if(state.getValue().isDrawerOpen()) {
             closeDrawer();
             return true;
         }
@@ -113,21 +75,15 @@ public class MainPresenter
     }
 
     public void openDrawer() {
-        isDrawerOpen = true;
-        if(hasView()) {
-            getView().openDrawer();
-        }
+        state.accept(state.getValue().toBuilder().setIsDrawerOpen(true).build());
     }
 
     public void closeDrawer() {
-        isDrawerOpen = false;
-        if(hasView()) {
-            getView().closeDrawer();
-        }
+        state.accept(state.getValue().toBuilder().setIsDrawerOpen(false).build());
     }
 
     public void toggleDrawer() {
-        if(isDrawerOpen) {
+        if(state.getValue().isDrawerOpen()) {
             closeDrawer();
         } else {
             openDrawer();
@@ -161,66 +117,40 @@ public class MainPresenter
     }
 
     private void enableLeftDrawer() {
-        this.leftDrawerEnabled = true;
-        if(hasView()) {
-            view.enableLeftDrawer();
-        }
+        state.accept(state.getValue().toBuilder().setLeftDrawerEnabled(true).build());
     }
 
     private void disableLeftDrawer() {
-        this.leftDrawerEnabled = false;
-        if(hasView()) {
-            view.disableLeftDrawer();
-        }
+        state.accept(state.getValue().toBuilder().setLeftDrawerEnabled(false).build());
     }
 
     private void hideToolbarGoPrevious() {
-        this.toolbarGoPreviousVisible = false;
-        if(hasView()) {
-            view.hideToolbarGoPrevious();
-        }
+        state.accept(state.getValue().toBuilder().setToolbarGoPreviousVisible(false).build());
     }
 
     private void showToolbarGoPrevious() {
-        this.toolbarGoPreviousVisible = true;
-        if(hasView()) {
-            view.showToolbarGoPrevious();
-        }
+        state.accept(state.getValue().toBuilder().setToolbarGoPreviousVisible(true).build());
     }
 
     private void showDrawerToggle() {
-        this.drawerToggleVisible = true;
-        if(hasView()) {
-            view.showDrawerToggle();
-        }
+        state.accept(state.getValue().toBuilder().setDrawerToggleVisible(true).build());
     }
 
     private void hideDrawerToggle() {
-        this.drawerToggleVisible = false;
-        if(hasView()) {
-            view.hideDrawerToggle();
-        }
+        state.accept(state.getValue().toBuilder().setDrawerToggleVisible(false).build());
     }
 
     @Override
     public Bundle toBundle() {
         Bundle bundle = BundleFactory.create();
-        bundle.putBoolean("isDrawerOpen", isDrawerOpen);
-        bundle.putInt("title", title);
-        bundle.putBoolean("toolbarGoPreviousVisible", toolbarGoPreviousVisible);
-        bundle.putBoolean("drawerToggleVisible", drawerToggleVisible);
-        bundle.putBoolean("leftDrawerEnabled", leftDrawerEnabled);
+        bundle.putParcelable("state", state.getValue());
         return bundle;
     }
 
     @Override
     public void fromBundle(@Nullable Bundle bundle) {
         if(bundle != null) {
-            isDrawerOpen = bundle.getBoolean("isDrawerOpen");
-            title = bundle.getInt("title");
-            toolbarGoPreviousVisible = bundle.getBoolean("toolbarGoPreviousVisible");
-            drawerToggleVisible = bundle.getBoolean("drawerToggleVisible");
-            leftDrawerEnabled = bundle.getBoolean("leftDrawerEnabled");
+            state.accept(bundle.getParcelable("state"));
         }
     }
 }

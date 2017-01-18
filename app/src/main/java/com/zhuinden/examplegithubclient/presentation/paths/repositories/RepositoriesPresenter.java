@@ -44,7 +44,7 @@ public class RepositoriesPresenter
     GithubRepoDataSource.Unbinder unbinder;
 
     @Override
-    protected void onAttach() {
+    protected void onAttach(ViewContract view) {
         unbinder = githubRepoRepository.subscribe( //
                 newRepositories -> {
                     RepositoriesPresenter.this.repositories = newRepositories;

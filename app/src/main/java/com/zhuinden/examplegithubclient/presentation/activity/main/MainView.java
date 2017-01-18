@@ -18,6 +18,7 @@ import butterknife.ButterKnife;
 import butterknife.OnClick;
 import flowless.ActivityUtils;
 import flowless.preset.FlowLifecycles;
+import io.reactivex.disposables.Disposable;
 
 /**
  * Created by Zhuinden on 2016.12.21..
@@ -25,7 +26,7 @@ import flowless.preset.FlowLifecycles;
 
 public class MainView
         extends DrawerLayout
-        implements MainPresenter.ViewContract, FlowLifecycles.ViewLifecycleListener {
+        implements /*MainPresenter.ViewContract,*/ FlowLifecycles.ViewLifecycleListener {
     public MainView(Context context) {
         super(context);
     }
@@ -74,47 +75,38 @@ public class MainView
         }
     }
 
-    @Override
     public void disableLeftDrawer() {
         setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED);
     }
 
-    @Override
     public void enableLeftDrawer() {
         setDrawerLockMode(DrawerLayout.LOCK_MODE_UNLOCKED);
     }
 
-    @Override
     public void hideDrawerToggle() {
         drawerToggle.setVisibility(View.GONE);
     }
 
-    @Override
     public void showDrawerToggle() {
         drawerToggle.setVisibility(View.VISIBLE);
     }
 
-    @Override
     public void hideToolbarGoPrevious() {
         toolbarGoPrevious.setVisibility(View.GONE);
     }
 
-    @Override
     public void showToolbarGoPrevious() {
         toolbarGoPrevious.setVisibility(View.VISIBLE);
     }
 
-    @Override
     public void openDrawer() {
         openDrawer(Gravity.LEFT);
     }
 
-    @Override
     public void closeDrawer() {
         closeDrawer(Gravity.LEFT);
     }
 
-    @Override
     public void setTitle(@StringRes int title) {
         toolbarText.setText(title);
     }
@@ -123,13 +115,41 @@ public class MainView
         return root;
     }
 
+    Disposable subscription;
+
     @Override
     public void onViewRestored() {
-        mainPresenter.attachView(this);
+        //mainPresenter.attachView(this);
+        subscription = mainPresenter.state().subscribe(mainState -> {
+            setTitle(mainState.title());
+            if(mainState.isDrawerOpen()) {
+                openDrawer();
+            } else {
+                closeDrawer();
+            }
+            if(mainState.toolbarGoPreviousVisible()) {
+                showToolbarGoPrevious();
+            } else {
+                hideToolbarGoPrevious();
+            }
+            if(mainState.drawerToggleVisible()) {
+                showDrawerToggle();
+            } else {
+                hideDrawerToggle();
+            }
+            if(mainState.leftDrawerEnabled()) {
+                enableLeftDrawer();
+            } else {
+                disableLeftDrawer();
+            }
+        });
     }
 
     @Override
     public void onViewDestroyed(boolean removedByFlow) {
-        mainPresenter.detachView();
+        if(!subscription.isDisposed()) {
+            subscription.dispose();
+        }
+        //mainPresenter.detachView();
     }
 }
