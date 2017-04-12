@@ -33,7 +33,7 @@ public class MainComponentConfig {
 
     public static MainComponent create(Flow flow) {
         return DaggerMainComponent.builder() //
-                .navigationModule(navigationModule(flow).get())
+                .navigationModule(navigationModule(flow).get()) //
                 .okHttpModule(okHttpModule) //
                 .retrofitModule(retrofitModule) //
                 .interactorModule(interactorModule) //
